@@ -1,10 +1,8 @@
 import React from 'react';
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { Typography, Box, Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
-const InnerBox = () => {
+const InnerBox = ({children}) => {
   const theme = useTheme()
   return (
     <Box sx={{
@@ -24,9 +22,7 @@ const InnerBox = () => {
       }}
       elevation={0}
       >
-        <Typography variant="h2">
-          Hello!
-        </Typography>
+        {children}
       </Paper>
     </Box>
   )

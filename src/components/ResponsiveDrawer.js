@@ -1,19 +1,49 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import { useTheme } from '@mui/material/styles';
+
+
+
+import swap from "../assets/images/swap.svg";
+import rewards from "../assets/images/rewards.svg";
+import docs from "../assets/images/docs.svg";
+import community from "../assets/images/community.svg";
+import { useLocation, useNavigate } from 'react-router-dom';
+
+const LINKS= [
+  {
+    name: 'Swap',
+    img: swap,
+    link: '/swap'
+  },
+  {
+    name: 'Rewards',
+    img: rewards,
+    link: '/rewards'
+  },
+  {
+    name: 'Community',
+    img: community,
+    link: '/community'
+  },
+  {
+    name: 'Docs',
+    img: docs,
+    link: '/docs'
+  }
+];
 
 const drawerWidth = 200;
 
-
 export default function ResponsiveDrawer(props) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme()
@@ -22,23 +52,30 @@ export default function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  console.log("Location", location);
+
   const drawer = (
     <div>
       {/* <Divider /> */}
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        {LINKS.map((link, index) => (
+          <ListItem key={link.name+"drawer"} disablePadding>
             <ListItemButton sx={{
             borderRadius: theme.spacing(2),
             mx: 1,
             ":hover":{
               background: `${theme.palette.primary.light}20`
+            },
+            [location.pathname === link.link]: {
+              background: `${theme.palette.primary.main}`
             }
-          }}>
-              <ListItemIcon align="center">
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            }}
+            onClick={() => navigate(link.link)}
+            >
+              <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
+                <img src={link.img} alt={link.name+" image"}/>
               </ListItemIcon>
-              <ListItemText primary={text}/>
+              <ListItemText primary={link.name}/>
             </ListItemButton>
           </ListItem>
         ))}
