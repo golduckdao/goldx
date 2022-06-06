@@ -66,9 +66,8 @@ export default function ResponsiveDrawer(props) {
             ":hover":{
               background: `${theme.palette.primary.light}20`
             },
-            [location.pathname === link.link]: {
-              background: `${theme.palette.primary.main}`
-            }
+            background: location.pathname === link.link ? theme.palette.primary.main : 'none'
+            
             }}
             onClick={() => navigate(link.link)}
             >
