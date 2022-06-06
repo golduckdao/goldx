@@ -12,6 +12,10 @@ export const theme = createTheme({
     secondary: {
       main: "#4E0076"
     },
-    rewardsTab: "#39D0D8CC"
+    rewardsTab: "#39D0D8CC",
+    background: {
+      default: "#131A36",
+      paper: "#0C0A28"
+    }
   }
 })

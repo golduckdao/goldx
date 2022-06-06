@@ -14,8 +14,9 @@ const Swap = () => {
       display: {xs: 'none', sm: 'block'},
       ml: {sm: '200px'},
       background: '#0C0926',
+      borderRadius: '30px 0px 0px 0px'
     }}>
-      <Typography ml={2} mx={2}>
+      <Typography py={2} align="center">
         <b>SWAP tokens at discounted Price</b>
       </Typography>
       <Box sx={{
@@ -28,7 +29,7 @@ const Swap = () => {
           borderRadius: '16px',
           height: {sm: '350px', lg: '470px', xl: '600px'},
           width: {sm: '440px', lg: '550px', xl:'760px'},
-          my: {sm: 12, lg: 8},
+          my: {sm: 10, lg: 6},
         }}>
           <Box sx={{
             display: 'flex', 

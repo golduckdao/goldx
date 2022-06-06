@@ -3,6 +3,7 @@ import { Typography, Box, Paper, Tabs, Tab, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import BlueButton from '../components/BlueButton';
 import TabPanel from '../components/TabPanel';
+import CustomTable from '../components/CustomTable';
 
 const Rewards = () => {
   const theme = useTheme();
@@ -27,7 +28,7 @@ const Rewards = () => {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <Typography>Rewards</Typography>
+        <Typography><b>Rewards Dashboard</b></Typography>
         <BlueButton>Claim All Rewards</BlueButton>
       </Box>
       <Box sx={{
@@ -41,7 +42,7 @@ const Rewards = () => {
           // justifyContent: 'center',
           // alignItems: 'center',
           width: "100%",
-          height: {sm: '400px', lg: '450px', xl: '634px'},
+          // height: {sm: '400px', lg: '450px', xl: '634px'},
           background: '#131431',
           borderRadius: theme.spacing(4),
           mb:{sm: 15, lg: 11},
@@ -56,17 +57,30 @@ const Rewards = () => {
 
           </Box>
           <TabPanel value={value} index={0} boxSx={{px: 0}}>
-            <Typography> My Rewards!</Typography>
+            <CustomTable />
           </TabPanel>
           <TabPanel value={value} index={1} boxSx={{px: 0}}>
-            <BlueButton>Update Balance</BlueButton>
-            <Typography> Overview!</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
+              <BlueButton>Update Balance</BlueButton>
+            </Box>
+            <CustomTable />
           </TabPanel>
           <TabPanel value={value} index={2} boxSx={{px: 0}}>
-            <BlueButton>Buy Rewards</BlueButton>
-            <Typography> Settings!</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
+              <BlueButton>Buy Rewards</BlueButton>
+            </Box>
+            <CustomTable />
           </TabPanel>
-          
+
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2}}>
+            <Typography mr={2}>Total Rewards: </Typography>
+            <Typography>59,000</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Typography mr={2}>Total Claimable: </Typography>
+            <Typography>2,500</Typography>
+          </Box>
         </Box>
       </Box>
       
