@@ -14,9 +14,25 @@ import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalance
 
 import logo from "../assets/images/Logo.svg";
 import { ButtonBase } from '@mui/material';
+import { useMoralis } from 'react-moralis';
 
 export default function Appbar() {
-  const theme = useTheme()
+  const theme = useTheme();
+  const { authenticate, isAuthenticated, isAuthenticating, user, account, logout } = useMoralis();
+
+  const login = async () => {
+    if (!isAuthenticated) {
+
+      await authenticate({signingMessage: "Welcome to the GoldX Portal"})
+        .then(function (user) {
+          if(user) console.log(user.get("ethAddress"));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{background: {xs: theme.palette.primary.dark, sm: `none`}}} elevation={0}>
@@ -51,8 +67,11 @@ export default function Appbar() {
               textTransform: 'none'
             }}
             startIcon={<AccountBalanceWalletOutlinedIcon sx={{color: '#39D0D8CC'}}/>}
+            onClick={ isAuthenticated ? () => logout() : () => login()}
             >
-              Connect Wallet
+              {
+                isAuthenticated ? `Disconnect ${user.get("ethAddress").slice(0,5)}...` : 'Connect Wallet'
+              }
             </Button>
           </Box>
           <IconButton
