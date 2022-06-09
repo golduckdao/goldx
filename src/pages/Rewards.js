@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { Typography, Box, Paper, Tabs, Tab, Button } from "@mui/material";
+import { Typography, Box, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import BlueButton from '../components/BlueButton';
 import TabPanel from '../components/TabPanel';
-import CustomTable from '../components/CustomTable';
+import MyRewards from '../components/MyRewards';
+import Overview from '../components/Overview';
+import Settings from '../components/Settings';
 
 const Rewards = () => {
   const theme = useTheme();
@@ -57,19 +59,13 @@ const Rewards = () => {
 
           </Box>
           <TabPanel value={value} index={0} boxSx={{px: 0}}>
-            <CustomTable />
+            <MyRewards />
           </TabPanel>
           <TabPanel value={value} index={1} boxSx={{px: 0}}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
-              <BlueButton>Update Balance</BlueButton>
-            </Box>
-            <CustomTable />
+            <Overview />
           </TabPanel>
           <TabPanel value={value} index={2} boxSx={{px: 0}}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
-              <BlueButton>Buy Rewards</BlueButton>
-            </Box>
-            <CustomTable />
+            <Settings />
           </TabPanel>
 
 
