@@ -23,7 +23,7 @@ const MyRewards = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
   const { isAuthenticated, isAuthenticating, user, account, Moralis } = useMoralis();
-  const t = useMoralis();
+
 
   let rows = [];
 

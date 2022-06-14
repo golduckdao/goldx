@@ -2,6 +2,12 @@ import React from 'react'
 
 import Box from "@mui/material/Box";
 
+import { useMoralis } from 'react-moralis';
+import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
+import erc20Abi from "../assets/blockchain/erc20_abi.json";
+import { ethers } from 'ethers';
+
+
 import CustomTable from './CustomTable'
 import BlueButton from '../components/BlueButton';
 
@@ -15,12 +21,116 @@ const HEADERS = [
 ]
 
 const Settings = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [tablerows, setTablerows] = React.useState([]);
+  const { isAuthenticated, isAuthenticating, user, account, Moralis } = useMoralis();
+
+
+  let rows = [];
+
+  // console.log("Signer", await signer.getAddress())
+
+  React.useEffect(() => {
+    async function fetchData() {
+
+      // console.log("is Authenticating?", isAuthenticating);
+      // console.log("is Authenticated?", isAuthenticated);
+
+      // console.log("account?", account);
+      if (isAuthenticated) {
+        // console.log("is loading?", isLoading)
+        const provider = await Moralis.enableWeb3();
+        const signer = provider.getSigner(account);
+
+        // console.log("Signer", await signer.getAddress())
+        // console.log("Totality", t)
+        const rewardPoolContract = new ethers.Contract(
+          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAbi,
+          signer
+        );
+
+        const lastBuyBackTimestamp = await rewardPoolContract.lastBuyBackTimestamp();
+        const buyBackWait = await rewardPoolContract.buyBackWait();
+
+        let promiseArr = [], results;
+
+        for (let i = 0; i < 10; i++) {
+          promiseArr.push(rewardPoolContract.rewardAssetAt(i))
+        }
+        const tokenAddresses = await Promise.all(promiseArr);
+
+        promiseArr = [];
+        for (let i = 0; i < 10; i++) {
+          if(tokenAddresses[i] !== "0x0000000000000000000000000000000000000000"){
+            const erc20Contract = new ethers.Contract(
+              tokenAddresses[i],
+              erc20Abi,
+              signer
+            );
+            promiseArr.push(erc20Contract.name())
+          }
+        }
+        const tokenNames = await Promise.all(promiseArr);
+
+        const totalTokens = tokenNames.length;
+
+        promiseArr = [];
+
+        for (let i = 0; i < totalTokens; i++) {
+          promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
+        }
+
+        let rewardInfoRows = (await Promise.all(promiseArr)).map(({
+          minimumTokenBalanceForRewards,
+          distributeShare,
+          claimWait,
+          isActive
+        }) => ([
+          parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
+          distributeShare.toString(),
+          parseFloat(claimWait.toString())/(60*24),
+          // parseFloat(lastBuyBackTimestamp.add(buyBackWait).toString()) * 1000 < Date.now() ?
+          // true :
+          // false,
+          "2 days",
+          isActive? "Yes": "No",
+
+        ]));
+
+
+        for(let i=0 ;i<tokenNames.length; i++) {
+          // if(rewardInfoRows[i][3]) {
+          //   rewardInfoRows[i][3] = await rewardPoolContract.generateBuyBackForOpen()
+          // } else {
+          //   rewardInfoRows[i][3] = false;
+          // }
+          rows.push([
+            tokenNames[i],
+            ...rewardInfoRows[i]
+          ])
+        }
+        console.log("Rows", rows);
+
+        setTablerows(rows)
+        setIsLoading(prev => false)
+
+      }
+
+
+
+    }
+
+    fetchData()
+
+  }, [isAuthenticated])
+
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
       <BlueButton>Buy Rewards</BlueButton>
     </Box>
-    <CustomTable headers={HEADERS}/>
+    <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows}/>
     </>
   )
 }
