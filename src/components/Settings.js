@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 
 import CustomTable from './CustomTable'
@@ -23,6 +23,8 @@ const HEADERS = [
 const Settings = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
+  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
+  const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
   const { isAuthenticated, isAuthenticating, user, account, Moralis } = useMoralis();
 
 
@@ -39,7 +41,7 @@ const Settings = () => {
       // console.log("account?", account);
       if (isAuthenticated) {
         // console.log("is loading?", isLoading)
-        const provider = await Moralis.enableWeb3();
+        const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
 
         // console.log("Signer", await signer.getAddress())
@@ -50,8 +52,10 @@ const Settings = () => {
           signer
         );
 
-        const lastBuyBackTimestamp = await rewardPoolContract.lastBuyBackTimestamp();
-        const buyBackWait = await rewardPoolContract.buyBackWait();
+        const l = await rewardPoolContract.lastBuyBackTimestamp();
+        const b = await rewardPoolContract.buyBackWait();
+        setLastBuyBackTimestamp(l);
+        setBuyBackWait(b);
 
         let promiseArr = [], results;
 
@@ -62,7 +66,7 @@ const Settings = () => {
 
         promiseArr = [];
         for (let i = 0; i < 10; i++) {
-          if(tokenAddresses[i] !== "0x0000000000000000000000000000000000000000"){
+          if (tokenAddresses[i] !== "0x0000000000000000000000000000000000000000") {
             const erc20Contract = new ethers.Contract(
               tokenAddresses[i],
               erc20Abi,
@@ -89,17 +93,14 @@ const Settings = () => {
         }) => ([
           parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
           distributeShare.toString(),
-          parseFloat(claimWait.toString())/(60*24),
-          // parseFloat(lastBuyBackTimestamp.add(buyBackWait).toString()) * 1000 < Date.now() ?
-          // true :
-          // false,
-          "2 days",
-          isActive? "Yes": "No",
+          parseFloat(claimWait.toString()) / (60 * 24),
+          parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
+          isActive ? "Yes" : "No",
 
         ]));
 
 
-        for(let i=0 ;i<tokenNames.length; i++) {
+        for (let i = 0; i < tokenNames.length; i++) {
           // if(rewardInfoRows[i][3]) {
           //   rewardInfoRows[i][3] = await rewardPoolContract.generateBuyBackForOpen()
           // } else {
@@ -123,14 +124,27 @@ const Settings = () => {
 
     fetchData()
 
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
+
+  const handleGenerateRewards = async () => {
+    if(isAuthenticated) {
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.generateBuyBackForOpen();
+    }
+  }
 
   return (
     <>
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2}}>
-      <BlueButton>Buy Rewards</BlueButton>
-    </Box>
-    <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows}/>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).toString()) * 1000 < Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
+      </Box>
+      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} />
     </>
   )
 }

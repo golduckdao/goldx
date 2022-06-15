@@ -38,7 +38,7 @@ const MyRewards = () => {
       // console.log("account?", account);
       if (isAuthenticated) {
         // console.log("is loading?", isLoading)
-        const provider = await Moralis.enableWeb3();
+        const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
 
         // console.log("Signer", await signer.getAddress())

@@ -15,9 +15,9 @@ const HEADERS = [
   'Name',
   'No. of Holders',
   'Total Distributed',
+  'Total Generated',
   'Total Claimable',
-  'Last Claim',
-  'Next Claim'
+  'Last Claim'
 ]
 
 const Overview = () => {
@@ -93,7 +93,9 @@ const Overview = () => {
           promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
         }
 
-        console.log("Rewards Info",await Promise.all(promiseArr));
+        let totalGenerated = (await Promise.all(promiseArr)).map(({totalRewardsDistributed}) => parseFloat(ethers.utils.formatEther(totalRewardsDistributed.toString())).toFixed(2));
+
+        console.log("Rewards Info",totalGenerated);
 
         
 
