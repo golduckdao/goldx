@@ -12,8 +12,9 @@ import { useTheme } from '@mui/material/styles';
 
 import swap from "../assets/images/swap.svg";
 import rewards from "../assets/images/rewards.svg";
+import services from "../assets/images/services.svg";
+import extensions from "../assets/images/extensions.svg";
 import docs from "../assets/images/docs.svg";
-import community from "../assets/images/community.svg";
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const LINKS= [
@@ -28,9 +29,14 @@ const LINKS= [
     link: '/rewards'
   },
   {
-    name: 'Community',
-    img: community,
-    link: '/community'
+    name: 'Services',
+    img: services,
+    link: '/services'
+  },
+  {
+    name: 'Extensions',
+    img: extensions,
+    link: 'extensions'
   },
   {
     name: 'Docs',

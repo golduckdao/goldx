@@ -10,8 +10,7 @@ const InnerBox = ({children, boxSx, paperSx}) => {
       borderRadius: theme.spacing(2),
       height: {
         xs: paperSx && paperSx.height ? paperSx.height.xs + 6 : '366px',
-        sm: paperSx && paperSx.height ? paperSx.height.sm + 6 : '356px',
-        lg: paperSx && paperSx.height ? paperSx.height.lg + 6 : '376px',
+        sm: paperSx && paperSx.height ? paperSx.height.lg + 6 : '376px',
         xl: paperSx && paperSx.height ? paperSx.height.xl + 6 : '456px'
       },
       width: {
@@ -28,7 +27,7 @@ const InnerBox = ({children, boxSx, paperSx}) => {
       <Paper sx={{
         background: '#1A2662',
         borderRadius: theme.spacing(2),
-        height: {xs: '360px', sm: '350px', lg: '370px', xl: '450px'},
+        height: {xs: '360px', sm: '370px', xl: '450px'},
         width: {xs: '350px', sm: '350px', lg: '380px', xl: '520px'},
         ...paperSx
       }}

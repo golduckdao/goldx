@@ -5,7 +5,9 @@ import { useTheme } from "@mui/material/styles";
 import InnerBox from "../components/InnerBox";
 import TabPanel from '../components/TabPanel';
 import Swap from '../components/Swap';
-import BlueButton from '../components/BlueButton';
+import Referral from '../components/Referral';
+import CustomTable from '../components/CustomTable';
+import ReserveTable from '../components/ReserveTable';
 
 const BuyToken = () => {
   const theme = useTheme();
@@ -38,7 +40,7 @@ const BuyToken = () => {
         <Paper sx={{
           background: '#131A36',
           borderRadius: '16px',
-          height: {sm: '450px', lg: '470px', xl: '600px'},
+          height: {sm: '480px', lg: '470px', xl: '600px'},
           width: {sm: '440px', lg: '550px', xl:'760px'},
           my: {sm: 10, lg: 6},
         }}>
@@ -75,53 +77,22 @@ const BuyToken = () => {
               <Swap />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 460, xl: 600 }, p:2}}>
+              <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 500, xl: 600 }, p:2}}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Typography>
                     <b>Lock Records</b>
                   </Typography>
                   <Button sx={{ color: '#33AEC1'}}>
-                    Claim All Unlocked
+                    <b>
+                      Claim All Unlocked
+                    </b>
                   </Button>
                 </Box>
-
+                <ReserveTable />
               </InnerBox>
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <InnerBox paperSx={{p:2, pt: 4}}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <Typography>
-                    <b>Total Invited</b>                    
-                  </Typography>
-                  <Typography>9 Users</Typography>
-                </Box>
-
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 5}}>
-                  <Typography>
-                    <b>Total Earned</b>                    
-                  </Typography>
-                  <Typography>5000</Typography>
-                </Box>
-
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <Typography>
-                    <b>Amount Earned</b>                    
-                  </Typography>
-                  <Typography>2.5 BNB</Typography>
-                </Box>
-
-                <Typography align='left' mt={5}>
-                  <b>Your Referral Link:</b>
-                </Typography>
-                <Typography align="left" mb={2}>
-                  https://www.xyz/eovnpeonzvklknvlkd
-                </Typography>
-
-                <BlueButton fullWidth>
-                  Copy to Clipboard
-                </BlueButton>
-
-              </InnerBox>
+              <Referral />
             </TabPanel>
             
           </Box>

@@ -6,13 +6,34 @@ import TabPanel from '../components/TabPanel';
 import MyRewards from '../components/MyRewards';
 import Overview from '../components/Overview';
 import Settings from '../components/Settings';
+import { useMoralis } from 'react-moralis';
+import { ethers } from 'ethers';
+import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 
 const Rewards = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const {isAuthenticated, isWeb3Enabled, Moralis, account} = useMoralis();
   
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleClaimAll = async () => {
+    if(isAuthenticated) {
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+
+      // console.log("Signer", await signer.getAddress())
+      // console.log("Totality", t)
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.multipleRewardClaimByUser();
+    } 
+    // else if( !isWeb3Enabled) {const t = await Moralis.enableWeb3(); console.log("Awaiting", isWeb3Enabled)}
   }
 
   return (
@@ -31,7 +52,7 @@ const Rewards = () => {
         alignItems: 'center'
       }}>
         <Typography><b>Rewards Dashboard</b></Typography>
-        <BlueButton>Claim All Rewards</BlueButton>
+        <BlueButton onClick={handleClaimAll}>Claim All Rewards</BlueButton>
       </Box>
       <Box sx={{
           display: 'flex',

@@ -37,9 +37,8 @@ const MyRewards = () => {
 
       // console.log("account?", account);
       if (isAuthenticated) {
-        console.log(isWeb3Enabled)
-        console.log("Auth", isAuthenticated)
-        await Moralis.enableWeb3();
+        if(!isWeb3Enabled) await Moralis.enableWeb3();
+        
         console.log(isWeb3Enabled)
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
@@ -51,6 +50,15 @@ const MyRewards = () => {
           rewardPoolContractAbi,
           signer
         );
+
+        const nativeAsset = await rewardPoolContract.nativeAsset();
+        const nativeAssetContract = new ethers.Contract(
+          nativeAsset,
+          erc20Abi,
+          signer
+        );
+        const nativeAssetBalance = await nativeAssetContract.balanceOf(account);
+
 
         let promiseArr = [], results;
 
@@ -80,7 +88,7 @@ const MyRewards = () => {
           promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
         }
 
-        const currentStatus = (await Promise.all(promiseArr)).map(({minimumTokenBalanceForRewards}) => (ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())));
+        const minTokenBalReqd = (await Promise.all(promiseArr)).map(({minimumTokenBalanceForRewards}) => minimumTokenBalanceForRewards);
 
         promiseArr = [];
 
@@ -108,7 +116,7 @@ const MyRewards = () => {
 
         
         for(let i = 0 ; i < totalTokens ; i++){
-          rows.push([tokenNames[i], currentStatus[i], totalRewarded[i], claimable[i], nextClaim[i], <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>Claim</BlueButton>])
+          rows.push([tokenNames[i], nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i], nextClaim[i], <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>Claim</BlueButton>])
         }
 
         setTablerows(rows)
