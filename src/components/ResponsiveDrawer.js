@@ -18,9 +18,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const LINKS= [
   {
-    name: 'Swap',
+    name: 'Buy Tokens',
     img: swap,
-    link: '/swap'
+    link: '/buy'
   },
   {
     name: 'Rewards',

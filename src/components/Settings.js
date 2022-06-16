@@ -111,7 +111,7 @@ const Settings = () => {
             ...rewardInfoRows[i]
           ])
         }
-        console.log("Rows", rows);
+        // console.log("Rows", rows);
 
         setTablerows(rows)
         setIsLoading(prev => false)
@@ -144,7 +144,7 @@ const Settings = () => {
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).toString()) * 1000 < Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
       </Box>
-      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} />
+      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="settings"/>
     </>
   )
 }

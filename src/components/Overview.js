@@ -17,7 +17,7 @@ const HEADERS = [
   'Total Distributed',
   'Total Generated',
   'Total Claimable',
-  'Last Claim'
+  'Total Holder Supply'
 ]
 
 const Overview = () => {
@@ -39,7 +39,7 @@ const Overview = () => {
       // console.log("account?", account);
       if (isAuthenticated) {
         // console.log("is loading?", isLoading)
-        const provider = await Moralis.enableWeb3();
+        const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
 
         // console.log("Signer", await signer.getAddress())
@@ -95,10 +95,18 @@ const Overview = () => {
 
         let totalGenerated = (await Promise.all(promiseArr)).map(({totalRewardsDistributed}) => parseFloat(ethers.utils.formatEther(totalRewardsDistributed.toString())).toFixed(2));
 
-        console.log("Rewards Info",totalGenerated);
+        promiseArr = [];
+        for (let i = 0; i < totalTokens; i++) {
+          promiseArr.push(rewardPoolContract.totalHolderSupply(tokenAddresses[i]))
+        }
 
+        const totalHolderSupply = (await Promise.all(promiseArr)).map(each => ethers.utils.formatEther(each.toString()));
+
+        for (let i = 0; i < totalTokens; i++) {
+          rows.push([tokenNames[i], noOfHolders[i], totalDistributed[i], totalGenerated[i], totalGenerated[i] - totalDistributed[i] , totalHolderSupply[i]])
+        }
         
-
+        setTablerows(rows)
         setIsLoading(prev => false)
 
       }
@@ -109,13 +117,28 @@ const Overview = () => {
 
     fetchData()
 
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
+
+  const handleUpdateBalance = async () => {
+    if(isAuthenticated){
+
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.updateBalance();
+    }
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <BlueButton>Update Balance</BlueButton>
+        <BlueButton onClick={handleUpdateBalance}>Update Balance</BlueButton>
       </Box>
-      <CustomTable headers={HEADERS} />
+      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey={"overview"}/>
     </>
   )
 }

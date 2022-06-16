@@ -122,7 +122,7 @@ const MyRewards = () => {
   }, [isAuthenticated])
 
   return (
-    <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows}/>
+    <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="my-rewards"/>
   )
 }
 

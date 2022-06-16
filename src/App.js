@@ -5,8 +5,8 @@ import { css } from "@emotion/react";
 import Appbar from "./components/Appbar";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Swap from "./pages/Swap";
 import Rewards from "./pages/Rewards";
+import BuyToken from "./pages/BuyToken";
 
 function App() {
   return (
@@ -22,8 +22,8 @@ function App() {
       <Appbar />
       <ResponsiveDrawer />
       <Routes>
-        <Route path="/" element={<Navigate to="/swap" replace />}/>
-        <Route path="/swap" element={<Swap />} />
+        <Route path="/" element={<Navigate to="/buy" replace />}/>
+        <Route path="/buy" element={<BuyToken />} />
         <Route path="/rewards" element={<Rewards />} />
       </Routes>
       

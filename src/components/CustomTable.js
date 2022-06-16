@@ -12,7 +12,7 @@ import { CircularProgress } from '@mui/material';
 
 
 
-export default function CustomTable({headers, tablerows, isLoading}) {
+export default function CustomTable({headers, tablerows, isLoading, ikey=""}) {
   if(!headers || headers.length === 0)
   return (
     <Paper sx={{
@@ -77,9 +77,9 @@ export default function CustomTable({headers, tablerows, isLoading}) {
         {
           tablerows && tablerows.length > 0 && !isLoading &&
           <TableBody>
-            {tablerows.map((row) => (
+            {tablerows.map((row, index) => (
               <TableRow
-                key={row}
+                key={ikey+index}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 {
