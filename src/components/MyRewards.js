@@ -22,7 +22,7 @@ const HEADERS = [
 const MyRewards = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, isAuthenticating, user, account, Moralis } = useMoralis();
+  const { isAuthenticated, isAuthenticating, user, account, Moralis, isWeb3Enabled } = useMoralis();
 
 
   let rows = [];
@@ -37,7 +37,10 @@ const MyRewards = () => {
 
       // console.log("account?", account);
       if (isAuthenticated) {
-        // console.log("is loading?", isLoading)
+        console.log(isWeb3Enabled)
+        console.log("Auth", isAuthenticated)
+        await Moralis.enableWeb3();
+        console.log(isWeb3Enabled)
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
 
@@ -119,7 +122,7 @@ const MyRewards = () => {
 
     fetchData()
 
-  }, [isAuthenticated])
+  }, [isAuthenticated, isWeb3Enabled])
 
   return (
     <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="my-rewards"/>

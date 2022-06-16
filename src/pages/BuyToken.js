@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Typography, Box, Paper, Tabs, Tab } from "@mui/material";
+import { Typography, Box, Paper, Tabs, Tab, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import InnerBox from "../components/InnerBox";
 import TabPanel from '../components/TabPanel';
+import Swap from '../components/Swap';
 import BlueButton from '../components/BlueButton';
 
 const BuyToken = () => {
@@ -18,7 +19,16 @@ const BuyToken = () => {
       borderRadius: '30px 0px 0px 0px'
     }}>
       <Typography py={2} align="center">
-        <b>SWAP tokens at discounted Price</b>
+        {
+          value === 0 && <b>SWAP tokens at discounted Price</b>
+        }
+        {
+          value === 1 && <b>Reserved Tokens</b>
+        }
+        {
+          value === 2 && <b>Your Referrals</b>
+        }
+        
       </Typography>
       <Box sx={{
         display: 'flex', 
@@ -28,7 +38,7 @@ const BuyToken = () => {
         <Paper sx={{
           background: '#131A36',
           borderRadius: '16px',
-          height: {sm: '350px', lg: '470px', xl: '600px'},
+          height: {sm: '450px', lg: '470px', xl: '600px'},
           width: {sm: '440px', lg: '550px', xl:'760px'},
           my: {sm: 10, lg: 6},
         }}>
@@ -62,41 +72,56 @@ const BuyToken = () => {
 
           }}>
             <TabPanel value={value} index={0}>
-              <InnerBox paperSx={{p: {xs: 2, lg: 3}}}>
-                <Paper sx={{ width: "100%", borderRadius: theme.spacing(2)}}>
-                  <Typography>Enter BNB Amount</Typography>
-                  
-                  <Typography>To Receive</Typography>
-                </Paper>
-                <Typography align="left" my={1}>
-                  Market Price: $0.008 
-                </Typography>
-                <Typography align="left" my={1}>
-                  Discount: 10%
-                </Typography>
-                <Typography align="left" my={1}>
-                  Min Tokens to Buy: 5000
-                </Typography>
-                <Typography align="left" my={1}>
-                  Max Tokens to buy: 20000
-                </Typography>
-                <Typography align="left" my={1}>
-                  *Unlock Date: 10th Jan, 2022
-                </Typography>
-                <Box sx={{ mt: 3}}>
-                  <Typography variant='caption' align="left" >
-                    *Your Discounted Tokens can be found under Reserved
+              <Swap />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 460, xl: 600 }, p:2}}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <Typography>
+                    <b>Lock Records</b>
                   </Typography>
+                  <Button sx={{ color: '#33AEC1'}}>
+                    Claim All Unlocked
+                  </Button>
                 </Box>
-                <BlueButton fullWidth sx={{mt: 2}}>Buy Now</BlueButton>
 
               </InnerBox>
             </TabPanel>
-            <TabPanel value={value} index={1}>
-              <InnerBox>Reserved</InnerBox>
-            </TabPanel>
             <TabPanel value={value} index={2}>
-              <InnerBox>Referrals</InnerBox>
+              <InnerBox paperSx={{p:2, pt: 4}}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <Typography>
+                    <b>Total Invited</b>                    
+                  </Typography>
+                  <Typography>9 Users</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 5}}>
+                  <Typography>
+                    <b>Total Earned</b>                    
+                  </Typography>
+                  <Typography>5000</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <Typography>
+                    <b>Amount Earned</b>                    
+                  </Typography>
+                  <Typography>2.5 BNB</Typography>
+                </Box>
+
+                <Typography align='left' mt={5}>
+                  <b>Your Referral Link:</b>
+                </Typography>
+                <Typography align="left" mb={2}>
+                  https://www.xyz/eovnpeonzvklknvlkd
+                </Typography>
+
+                <BlueButton fullWidth>
+                  Copy to Clipboard
+                </BlueButton>
+
+              </InnerBox>
             </TabPanel>
             
           </Box>
