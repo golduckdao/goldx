@@ -19,10 +19,12 @@ import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
+import SwitchChainDialog from './SwitchChainDialog';
 
 export default function Appbar() {
   const theme = useTheme();
-  const [balance, setBalance] = React.useState(-1);
+  const [balance, setBalance] = React.useState(0);
+  const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
   console.log("Is Auth?", isAuthenticated)
 
@@ -53,7 +55,7 @@ export default function Appbar() {
           erc20Abi,
           signer
         );
-        const nativeAssetBalance = await nativeAssetContract.balanceOf(account);
+        const nativeAssetBalance = await nativeAssetContract.balanceOf(user.get("ethAddress"));
         setBalance(nativeAssetBalance.toString());
       }
     }
@@ -97,7 +99,7 @@ export default function Appbar() {
             
           </Typography>
           <Box sx={{ display: {xs: 'none', sm: 'block'}}}>
-            <ButtonBase>
+            <ButtonBase onClick={() => setSwitchChainDialog(true)}>
               <Typography variant='subtitle' color="text.secondary">
                 Switch to Network
               </Typography>
@@ -128,6 +130,7 @@ export default function Appbar() {
           </IconButton>
         </Toolbar>
       </AppBar>
+      <SwitchChainDialog open={switchChainDialog} onClose={() => setSwitchChainDialog(false)}/>
     </Box>
   );
 }

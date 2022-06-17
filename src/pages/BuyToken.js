@@ -4,10 +4,9 @@ import { useTheme } from "@mui/material/styles";
 
 import InnerBox from "../components/InnerBox";
 import TabPanel from '../components/TabPanel';
-import Swap from '../components/Swap';
 import Referral from '../components/Referral';
-import CustomTable from '../components/CustomTable';
 import ReserveTable from '../components/ReserveTable';
+import Generate from '../components/Generate';
 
 const BuyToken = () => {
   const theme = useTheme();
@@ -62,7 +61,7 @@ const BuyToken = () => {
               },
             }}
             >
-              <Tab label="Swap" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
+              <Tab label="Generate" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
               <Tab label="Reserved" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
               <Tab label="Referrals" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
             </Tabs>
@@ -74,7 +73,7 @@ const BuyToken = () => {
 
           }}>
             <TabPanel value={value} index={0}>
-              <Swap />
+              <Generate />
             </TabPanel>
             <TabPanel value={value} index={1}>
               <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 500, xl: 600 }, p:2}}>
