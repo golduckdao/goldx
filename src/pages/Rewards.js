@@ -88,16 +88,6 @@ const Rewards = () => {
           <TabPanel value={value} index={2} boxSx={{px: 0}}>
             <Settings />
           </TabPanel>
-
-
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2}}>
-            <Typography mr={2}>Total Rewards: </Typography>
-            <Typography>59,000</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <Typography mr={2}>Total Claimable: </Typography>
-            <Typography>2,500</Typography>
-          </Box>
         </Box>
       </Box>
       

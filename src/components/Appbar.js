@@ -16,9 +16,49 @@ import logo from "../assets/images/Logo.svg";
 import { ButtonBase } from '@mui/material';
 import { useMoralis } from 'react-moralis';
 
+import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
+import erc20Abi from "../assets/blockchain/erc20_abi.json";
+import { ethers } from 'ethers';
+
 export default function Appbar() {
   const theme = useTheme();
-  const { authenticate, isAuthenticated, isAuthenticating, user, account, logout } = useMoralis();
+  const [balance, setBalance] = React.useState(-1);
+  const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
+  console.log("Is Auth?", isAuthenticated)
+
+  React.useEffect(() => {
+    async function fetchBalance() {
+      if(isAuthenticated) {
+        console.log("Executing")
+        try{
+          if(!isWeb3Enabled) await Moralis.enableWeb3();
+        } catch(e) {
+          console.log("Moralis Error", e)
+        }
+        
+        const provider = new ethers.providers.Web3Provider(Moralis.provider);
+        const signer = provider.getSigner(account);
+
+        // console.log("Signer", await signer.getAddress())
+        // console.log("Totality", t)
+        const rewardPoolContract = new ethers.Contract(
+          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAbi,
+          signer
+        );
+
+        const nativeAsset = await rewardPoolContract.nativeAsset();
+        const nativeAssetContract = new ethers.Contract(
+          nativeAsset,
+          erc20Abi,
+          signer
+        );
+        const nativeAssetBalance = await nativeAssetContract.balanceOf(account);
+        setBalance(nativeAssetBalance.toString());
+      }
+    }
+    fetchBalance();
+  }, [isAuthenticated, isWeb3Enabled])
 
   const login = async () => {
     if (!isAuthenticated) {
@@ -51,7 +91,10 @@ export default function Appbar() {
             <img src={logo} alt="GOLDZ" height={theme.spacing(5)}/>
           </IconButton>
           <Typography variant="h7">
-            <b>Token Balance: 10,94,000</b>
+            {
+              isAuthenticated ?  <b>Token Balance: {balance}</b> : <b>Please Connect your Wallet</b>
+            }
+            
           </Typography>
           <Box sx={{ display: {xs: 'none', sm: 'block'}}}>
             <ButtonBase>
@@ -70,7 +113,7 @@ export default function Appbar() {
             onClick={ isAuthenticated ? () => logout() : () => login()}
             >
               {
-                isAuthenticated ? `Disconnect ${user.get("ethAddress").slice(0,5)}...` : 'Connect Wallet'
+                isAuthenticated ? `Disconnect 0x...${user.get("ethAddress").slice(user.get("ethAddress").length-5,user.get("ethAddress").length)}` : 'Connect Wallet'
               }
             </Button>
           </Box>

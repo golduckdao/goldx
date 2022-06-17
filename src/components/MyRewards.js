@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useMoralis } from 'react-moralis';
 
+import { Typography, Box} from "@mui/material";
 import CustomTable from './CustomTable';
 import BlueButton from './BlueButton';
 
@@ -22,6 +23,8 @@ const HEADERS = [
 const MyRewards = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
+  const [rewarded, setRewarded] = React.useState(0);
+  const [claimable, setClaimable] = React.useState(0);
   const { isAuthenticated, isAuthenticating, user, account, Moralis, isWeb3Enabled } = useMoralis();
 
 
@@ -114,11 +117,15 @@ const MyRewards = () => {
 
         const nextClaim = (await Promise.all(promiseArr)).map(({nextClaimTime}) => nextClaimTime.toString());
 
-        
+        let tr = 0, tc = 0; 
         for(let i = 0 ; i < totalTokens ; i++){
           rows.push([tokenNames[i], nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i], nextClaim[i], <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>Claim</BlueButton>])
+          tr += parseFloat(totalRewarded[i]);
+          tc += parseFloat(claimable[i]);
         }
-
+        
+        setRewarded(tr.toFixed(2));
+        setClaimable(tc.toFixed(2));
         setTablerows(rows)
         setIsLoading(prev => false)
 
@@ -133,7 +140,17 @@ const MyRewards = () => {
   }, [isAuthenticated, isWeb3Enabled])
 
   return (
+    <>
     <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="my-rewards"/>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2}}>
+      <Typography mr={2}>Total Rewarded: </Typography>
+      <Typography>{rewarded}</Typography>
+    </Box>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <Typography mr={2}>Total Claimable: </Typography>
+      <Typography>{claimable}</Typography>
+    </Box>
+    </>
   )
 }
 

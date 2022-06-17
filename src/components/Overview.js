@@ -14,10 +14,10 @@ import BlueButton from '../components/BlueButton';
 const HEADERS = [
   'Name',
   'No. of Holders',
-  'Total Distributed',
+  'Total Holder Supply',
   'Total Generated',
+  'Total Distributed',
   'Total Claimable',
-  'Total Holder Supply'
 ]
 
 const Overview = () => {
@@ -103,7 +103,7 @@ const Overview = () => {
         const totalHolderSupply = (await Promise.all(promiseArr)).map(each => ethers.utils.formatEther(each.toString()));
 
         for (let i = 0; i < totalTokens; i++) {
-          rows.push([tokenNames[i], noOfHolders[i], totalDistributed[i], totalGenerated[i], totalGenerated[i] - totalDistributed[i] , totalHolderSupply[i]])
+          rows.push([tokenNames[i], noOfHolders[i], totalHolderSupply[i], totalGenerated[i], totalDistributed[i],  totalGenerated[i] - totalDistributed[i] ])
         }
         
         setTablerows(rows)

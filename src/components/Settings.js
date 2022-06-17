@@ -142,7 +142,7 @@ const Settings = () => {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).toString()) * 1000 < Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
+        <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).mul(1000).toString()) < Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
       </Box>
       <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="settings"/>
     </>
