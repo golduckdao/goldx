@@ -32,7 +32,11 @@ function App() {
       <ResponsiveDrawer />
       <Routes>
         <Route path="/" element={<Navigate to="/buy" replace />}/>
-        <Route path="/buy" element={<BuyToken />} />
+        <Route path="/buy" >
+          <Route index element={<BuyToken />} />
+          <Route path=":user" element={<BuyToken />} />
+        </Route>
+        
         <Route path="/rewards" element={<Rewards />} />
       </Routes>
       

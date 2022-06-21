@@ -49,17 +49,22 @@ export default function ReserveTable() {
           sale,
           lockedAmount,
           lockedTime
-        }, index) => ([
-          parseInt(sale.toString()) ? "Market Price" : "Fixed Process",
-          ethers.utils.formatEther(lockedAmount.toString()),
-          new Date(lockedTime.mul(1000).toString()),
-          <Button 
+        }, index) => ({
+          sale: parseInt(sale.toString()) ? "Market Price" : "Fixed Process",
+          lockedAmount: ethers.utils.formatEther(lockedAmount.toString()),
+          lcokedTime: new Date(lockedTime.mul(1000).toString()),
+          action: <Button 
           sx={{ color: '#33AEC1' }}
           onClick={async () => await buyTokenContract.claim(userTickets[index])}
           >
             <b>Claim</b>
           </Button>
-        ]));
+        }))
+        .map(({sale, lockedAmount, lockedTime}) => [
+          sale,
+          lockedAmount,
+          `${lockedTime.getDate()}/${lockedTime.getMonth()}/${lockedTime.getFullYear()} - ${lockedTime.getHours()}:${lockedTime.getMinutes()}`
+        ]);
         setTablerows(rows);
         setIsLoading(false);
       }

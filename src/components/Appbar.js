@@ -32,12 +32,12 @@ export default function Appbar() {
     async function fetchBalance() {
       if(isAuthenticated) {
         console.log("Executing")
-        try{
-          if(!isWeb3Enabled) await Moralis.enableWeb3();
-        } catch(e) {
-          console.log("Moralis Error", e)
-        }
-        
+        // try{
+        //   if(!isWeb3Enabled) await Moralis.enableWeb3();
+        // } catch(e) {
+        //   console.log("Moralis Error", e)
+        // }
+        if(!isWeb3Enabled) await Moralis.enableWeb3();
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
 

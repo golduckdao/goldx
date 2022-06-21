@@ -10,9 +10,11 @@ import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { debounce } from 'lodash';
 
-const Contribute = ({setDiscountRate}) => {
+const Contribute = ({setDiscountRate, address}) => {
   const theme = useTheme();
-  const { isAuthenticated, isWeb3Enabled, user, Moralis} = useMoralis();
+  const { isAuthenticated, isWeb3Enabled, account, Moralis} = useMoralis();
+
+  const [isReferral, setIsReferral] = useState(true);
   const [minDeposit, setMinDeposit] = useState(0);
   const [maxDeposit, setMaxDeposit] = useState(0);
   const [discount, setDiscount] = useState(0);
@@ -35,11 +37,31 @@ const Contribute = ({setDiscountRate}) => {
     } else {
       [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
     }
-    let sum = parseFloat(ethers.utils.formatEther(amount.toString())) + parseFloat(ethers.utils.formatEther(discount.toString()));
+    // let sum = parseFloat(ethers.utils.formatEther(amount.toString())) + parseFloat(ethers.utils.formatEther(discount.toString()));
+    setIsReferral(await buyTokenContract.isReferral());
     setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
     setLockedValue(parseFloat(ethers.utils.formatEther(discount.toString())));
-    setValue(sum);
+    setValue(t);
   }, 2000);
+
+  const handleBuy = async () => {
+    if(isAuthenticated) {
+      if(!isWeb3Enabled) await Moralis.enableWeb3();
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account)
+      const buyTokenContract = new ethers.Contract(
+        "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+        buyTokenABI,
+        signer
+      );
+      if(isReferral && address) {
+        await buyTokenContract.buy(ethers.utils.parseEther(value.toString()), address);
+      } else {
+        await buyTokenContract.buy(ethers.utils.parseEther(value.toString()), ethers.constants.AddressZero);
+      }
+      
+    }
+  }
 
   React.useEffect(() => {
     async function fetchData(){
@@ -87,7 +109,7 @@ const Contribute = ({setDiscountRate}) => {
             <ArrowRightAltIcon/>
           </Grid>
           <Grid item xs={5} align="center">
-            <TextField fullWidth variant='outlined' disabled value={value}/>
+            <TextField fullWidth variant='outlined' disabled value={instantValue + lockedValue}/>
           </Grid>
         </Grid>
       </Paper>
@@ -111,7 +133,7 @@ const Contribute = ({setDiscountRate}) => {
           *Any Locked Tokens can be found under Reserved Tab
         </Typography>
       </Box>
-      <BlueButton fullWidth sx={{mt: 2}}>Buy Now</BlueButton>
+      <BlueButton fullWidth sx={{mt: 2}} onClick={handleBuy}>Buy Now</BlueButton>
 
     </InnerBox>
   )

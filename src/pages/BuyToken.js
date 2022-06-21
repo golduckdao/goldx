@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Typography, Box, Paper, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
 
 import InnerBox from "../components/InnerBox";
 import TabPanel from '../components/TabPanel';
@@ -10,6 +11,7 @@ import Contribute from '../components/Contribute';
 
 const BuyToken = () => {
   const theme = useTheme();
+  const {user} = useParams();
   const [value, setValue] = useState(0);
   const [discountRate, setDiscountRate] = useState(0);
   return (
@@ -74,7 +76,7 @@ const BuyToken = () => {
 
           }}>
             <TabPanel value={value} index={0}>
-              <Contribute setDiscountRate={(rate) => setDiscountRate(rate)}/>
+              <Contribute setDiscountRate={(rate) => setDiscountRate(rate)} address={user}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
               <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 500, xl: 600 }, p:2}}>
