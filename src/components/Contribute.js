@@ -92,10 +92,10 @@ const Contribute = ({setDiscountRate}) => {
         </Grid>
       </Paper>
       <Typography align="left" variant="subtitle2" mt={4}>
-        Min Tokens to Buy: {minDeposit}
+        Min Deposit: {minDeposit}
       </Typography>
       <Typography align="left" variant="subtitle2">
-        Max Tokens to buy: {maxDeposit}
+        Max Deposit: {maxDeposit}
       </Typography>
       <Typography align="left" variant="subtitle2">
         Discount: {discount === 0 ? 'N/A' : `${discount} %`}

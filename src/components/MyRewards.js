@@ -119,7 +119,7 @@ const MyRewards = () => {
 
         let tr = 0, tc = 0; 
         for(let i = 0 ; i < totalTokens ; i++){
-          rows.push([tokenNames[i], nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i], nextClaim[i], <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>Claim</BlueButton>])
+          rows.push([tokenNames[i], nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i], nextClaim[i] === '0' ? 'N/A' : new Date(nextClaim[i]), <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>Claim</BlueButton>])
           tr += parseFloat(totalRewarded[i]);
           tc += parseFloat(claimable[i]);
         }
