@@ -31,9 +31,9 @@ const Contribute = ({setDiscountRate}) => {
       provider
     );
     if(currentSale) {
-      [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
-    } else {
       [amount, discount] = (await buyTokenContract.getAmountOutForMarketPrice(ethers.utils.parseEther(t.toString())));
+    } else {
+      [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
     }
     let sum = parseFloat(ethers.utils.formatEther(amount.toString())) + parseFloat(ethers.utils.formatEther(discount.toString()));
     setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
