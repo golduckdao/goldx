@@ -60,8 +60,8 @@ const Contribute = ({setDiscountRate}) => {
         setMinDeposit(mind);
         setMaxDeposit(maxd);
         setDiscount(currD);
-        // setCurrentSale(currentSale);
-        setCurrentSale(1);
+        setCurrentSale(currentSale);
+        // setCurrentSale(1);
         setDiscountRate(currD)
       }
     };
