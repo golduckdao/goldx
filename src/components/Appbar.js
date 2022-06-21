@@ -56,7 +56,7 @@ export default function Appbar() {
           signer
         );
         const nativeAssetBalance = await nativeAssetContract.balanceOf(user.get("ethAddress"));
-        setBalance(nativeAssetBalance.toString());
+        setBalance(ethers.utils.formatEther(nativeAssetBalance.toString()));
       }
     }
     fetchBalance();

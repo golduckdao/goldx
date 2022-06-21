@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { Typography, Box, Paper, Tabs, Tab, Button } from "@mui/material";
+import { Typography, Box, Paper, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import InnerBox from "../components/InnerBox";
 import TabPanel from '../components/TabPanel';
 import Referral from '../components/Referral';
 import ReserveTable from '../components/ReserveTable';
-import Generate from '../components/Generate';
+import Contribute from '../components/Contribute';
 
 const BuyToken = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const [discountRate, setDiscountRate] = useState(0);
   return (
     <>
     <Box sx={{
@@ -21,7 +22,7 @@ const BuyToken = () => {
     }}>
       <Typography py={2} align="center">
         {
-          value === 0 && <b>SWAP tokens at discounted Price</b>
+          value === 0 && <b>SWAP tokens at {discountRate}% Discounted Price</b>
         }
         {
           value === 1 && <b>Reserved Tokens</b>
@@ -61,7 +62,7 @@ const BuyToken = () => {
               },
             }}
             >
-              <Tab label="Generate" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
+              <Tab label="Contribute" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
               <Tab label="Reserved" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
               <Tab label="Referrals" sx={{ textTransform: 'none', '&.Mui-selected': {background: theme.palette.primary.light, color: theme.palette.text.primary}, borderRadius: '25px'}}/>
             </Tabs>
@@ -73,20 +74,10 @@ const BuyToken = () => {
 
           }}>
             <TabPanel value={value} index={0}>
-              <Generate />
+              <Contribute setDiscountRate={(rate) => setDiscountRate(rate)}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
               <InnerBox paperSx={{width: {xs: 440, sm: 400, lg: 500, xl: 600 }, p:2}}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <Typography>
-                    <b>Lock Records</b>
-                  </Typography>
-                  <Button sx={{ color: '#33AEC1'}}>
-                    <b>
-                      Claim All Unlocked
-                    </b>
-                  </Button>
-                </Box>
                 <ReserveTable />
               </InnerBox>
             </TabPanel>

@@ -23,10 +23,10 @@ const HEADERS = [
 const Overview = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, isAuthenticating, user, account, Moralis } = useMoralis();
+  const { isAuthenticated, account, Moralis } = useMoralis();
 
 
-  let rows = [];
+  
 
   // console.log("Signer", await signer.getAddress())
 
@@ -38,6 +38,7 @@ const Overview = () => {
 
       // console.log("account?", account);
       if (isAuthenticated) {
+        let rows = [];
         // console.log("is loading?", isLoading)
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
@@ -50,7 +51,7 @@ const Overview = () => {
           signer
         );
 
-        let promiseArr = [], results;
+        let promiseArr = [];
 
         for (let i = 0; i < 10; i++) {
           promiseArr.push(rewardPoolContract.rewardAssetAt(i))
@@ -79,6 +80,7 @@ const Overview = () => {
         }
 
         const noOfHolders = (await Promise.all(promiseArr)).map(each => each.toString());
+        
 
         promiseArr = [];
 
@@ -117,7 +119,7 @@ const Overview = () => {
 
     fetchData()
 
-  }, [isAuthenticated]);
+  }, [isAuthenticated, Moralis.provider, account]);
 
   const handleUpdateBalance = async () => {
     if(isAuthenticated){

@@ -143,11 +143,11 @@ const MyRewards = () => {
     <>
     <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="my-rewards"/>
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2}}>
-      <Typography mr={2}>Total Rewarded: </Typography>
+      <Typography mr={2}>Total Tokens Rewarded: </Typography>
       <Typography>{rewarded}</Typography>
     </Box>
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <Typography mr={2}>Total Claimable: </Typography>
+      <Typography mr={2}>Total Tokens Claimable: </Typography>
       <Typography>{claimable}</Typography>
     </Box>
     </>
