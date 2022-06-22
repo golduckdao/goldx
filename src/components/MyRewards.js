@@ -115,7 +115,7 @@ const MyRewards = () => {
           promiseArr.push(rewardPoolContract.getAccountRewardsInfo(tokenAddresses[i], account))
         }
 
-        const nextClaim = (await Promise.all(promiseArr)).map(({nextClaimTime}) => nextClaimTime.toString());
+        const nextClaim = (await Promise.all(promiseArr)).map(({nextClaimTime}) => nextClaimTime.mul(1000).toString());
 
         let tr = 0, tc = 0; 
         for(let i = 0 ; i < totalTokens ; i++){
