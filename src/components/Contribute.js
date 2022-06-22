@@ -54,10 +54,13 @@ const Contribute = ({setDiscountRate, address}) => {
         buyTokenABI,
         signer
       );
+      console.log("Starting")
       if(isReferral && address) {
-        await buyTokenContract.buy(ethers.utils.parseEther(value.toString()), address);
+        console.log("Referred")
+        await buyTokenContract.buy(address, {value: ethers.utils.parseEther(value.toString())});
       } else {
-        await buyTokenContract.buy(ethers.utils.parseEther(value.toString()), ethers.constants.AddressZero);
+        console.log("Unreferred", ethers.utils.parseEther(value.toString()).toString(), ethers.constants.AddressZero)
+        await buyTokenContract.buy(ethers.constants.AddressZero, {value: ethers.utils.parseEther(value.toString())});
       }
       
     }
@@ -122,10 +125,10 @@ const Contribute = ({setDiscountRate, address}) => {
       <Typography align="left" variant="subtitle2">
         Discount: {discount === 0 ? 'N/A' : `${discount} %`}
       </Typography>
-      <Typography align="left" variant="subtitle2">
+      <Typography align="left" variant="subtitle2" noWrap>
         Tokens to Receive Instantly: {instantValue}
       </Typography>
-      <Typography align="left" variant="subtitle2">
+      <Typography align="left" variant="subtitle2" noWrap>
         Your locked tokens: {lockedValue}
       </Typography>
       <Box sx={{ mt: 1}}>
