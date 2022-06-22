@@ -12,6 +12,12 @@ import { useMoralis } from "react-moralis";
 
 function App() {
   const {Moralis, isWeb3Enabled} = useMoralis();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   React.useEffect(() => {
     async function initialize() {
       await Moralis.enableWeb3();
@@ -28,8 +34,8 @@ function App() {
     background-position: center;
     background-repeat: no-repeat;
     `}>
-      <Appbar />
-      <ResponsiveDrawer />
+      <Appbar toggleMobileDrawer={handleDrawerToggle}/>
+      <ResponsiveDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle}/>
       <Routes>
         <Route path="/" element={<Navigate to="/buy" replace />}/>
         <Route path="/buy" >

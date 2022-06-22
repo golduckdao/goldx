@@ -15,6 +15,7 @@ import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
 import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
+import BlueButton from './BlueButton';
 
 
 export default function ReserveTable() {
@@ -63,7 +64,7 @@ export default function ReserveTable() {
         .map(({sale, lockedAmount, lockedTime}) => [
           sale,
           lockedAmount,
-          `${lockedTime.getDate().toString()}/${lockedTime.getMonth()}/${lockedTime.getFullYear()} - ${lockedTime.getHours()}:${lockedTime.getMinutes()}`
+          `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth()}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`
         ]);
 
         setTablerows(rows);
@@ -89,7 +90,7 @@ export default function ReserveTable() {
 
   return (
     <>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
       <Typography>
         <b>Lock Records</b>
       </Typography>
@@ -98,6 +99,11 @@ export default function ReserveTable() {
           Claim All Unlocked
         </b>
       </Button>
+    </Box>
+    <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'center', alignItems: 'center', my: 2}}>
+      <BlueButton sx={{ px: 5}} onClick={handleMultiClaim}>
+        Claim All Unlocked
+      </BlueButton>
     </Box>
     <TableContainer component={Paper} sx={{ background: 'none' }} elevation={0}>
       <Table sx={{ minWidth: 400 }} aria-label="simple table">

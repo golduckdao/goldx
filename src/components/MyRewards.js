@@ -126,7 +126,7 @@ const MyRewards = () => {
           rows.push([
             tokenNames[i],
             nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
-            nextClaim[i] === '0' ? d : `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}` ,
+            nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth()}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
             <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>
               Claim
             </BlueButton>

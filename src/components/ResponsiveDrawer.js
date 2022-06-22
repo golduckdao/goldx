@@ -50,15 +50,12 @@ const drawerWidth = 200;
 export default function ResponsiveDrawer(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const theme = useTheme()
+  const { window, mobileOpen, handleDrawerToggle } = props;
+  
+  const theme = useTheme();
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  
 
-  console.log("Location", location);
 
   const drawer = (
     <div>

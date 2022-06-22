@@ -86,8 +86,7 @@ const Contribute = ({setDiscountRate, address}) => {
         setMaxDeposit(maxd);
         setDiscount(currD);
         setCurrentSale(currentSale);
-        // setCurrentSale(1);
-        setDiscountRate(currD)
+        setDiscountRate(currD);
       }
     };
     fetchData()

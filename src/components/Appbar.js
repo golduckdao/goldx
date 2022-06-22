@@ -21,7 +21,7 @@ import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
 import SwitchChainDialog from './SwitchChainDialog';
 
-export default function Appbar() {
+export default function Appbar({toggleMobileDrawer}) {
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
   const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
@@ -123,7 +123,7 @@ export default function Appbar() {
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            // onClick={handleDrawerToggle}
+            onClick={toggleMobileDrawer}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
