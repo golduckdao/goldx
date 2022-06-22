@@ -121,6 +121,8 @@ const MyRewards = () => {
         for(let i = 0 ; i < totalTokens ; i++){
           let d = nextClaim[i] === '0' ? 'N/A' : new Date(nextClaim[i]);
 
+          console.log("Next Claim for token", i, d);
+
           rows.push([
             tokenNames[i],
             nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],

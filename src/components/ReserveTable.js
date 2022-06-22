@@ -44,7 +44,9 @@ export default function ReserveTable() {
         let userTickets = await buyTokenContract.getUserAllLockTickets(account);
         let promiseArr = [];
         userTickets.forEach(ticket => promiseArr.push(buyTokenContract.userLockInfo(ticket)));
-        const rows = (await Promise.all(promiseArr))
+        let rows = (await Promise.all(promiseArr));
+        console.log("Rows before processing", rows);
+        rows = rows
         .map(({
           sale,
           lockedAmount,
@@ -65,6 +67,8 @@ export default function ReserveTable() {
           lockedAmount,
           `${lockedTime.getDate()}/${lockedTime.getMonth()}/${lockedTime.getFullYear()} - ${lockedTime.getHours()}:${lockedTime.getMinutes()}`
         ]);
+        console.log("Rows after processing", rows);
+
         setTablerows(rows);
         setIsLoading(false);
       }
