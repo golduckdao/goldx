@@ -119,7 +119,7 @@ const MyRewards = () => {
 
         let tr = 0, tc = 0; 
         for(let i = 0 ; i < totalTokens ; i++){
-          let d = nextClaim[i] === '0' ? 'N/A' : new Date(nextClaim[i]);
+          let d = nextClaim[i] === '0' ? 'N/A' : new Date(parseInt(nextClaim[i]));
 
           console.log("Next Claim for token", i, d);
 

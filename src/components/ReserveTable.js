@@ -44,9 +44,7 @@ export default function ReserveTable() {
         let userTickets = await buyTokenContract.getUserAllLockTickets(account);
         let promiseArr = [];
         userTickets.forEach(ticket => promiseArr.push(buyTokenContract.userLockInfo(ticket)));
-        let rows = (await Promise.all(promiseArr));
-        console.log("Rows before processing", rows);
-        rows = rows
+        let rows = (await Promise.all(promiseArr))
         .map(({
           sale,
           lockedAmount,
@@ -54,7 +52,7 @@ export default function ReserveTable() {
         }, index) => ({
           sale: parseInt(sale.toString()) ? "Market Price" : "Fixed Process",
           lockedAmount: ethers.utils.formatEther(lockedAmount.toString()),
-          lcokedTime: new Date(lockedTime.mul(1000).toString()),
+          lockedTime: new Date(parseInt(lockedTime.mul(1000).toString())),
           action: <Button 
           sx={{ color: '#33AEC1' }}
           onClick={async () => await buyTokenContract.claim(userTickets[index])}
@@ -65,9 +63,8 @@ export default function ReserveTable() {
         .map(({sale, lockedAmount, lockedTime}) => [
           sale,
           lockedAmount,
-          `${lockedTime.getDate()}/${lockedTime.getMonth()}/${lockedTime.getFullYear()} - ${lockedTime.getHours()}:${lockedTime.getMinutes()}`
+          `${lockedTime.getDate().toString()}/${lockedTime.getMonth()}/${lockedTime.getFullYear()} - ${lockedTime.getHours()}:${lockedTime.getMinutes()}`
         ]);
-        console.log("Rows after processing", rows);
 
         setTablerows(rows);
         setIsLoading(false);
@@ -136,7 +133,7 @@ export default function ReserveTable() {
         {
           tablerows && tablerows.length > 0 && !isLoading &&
           <TableBody>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            {tablerows
               .slice(page * 4, page * 4 + 4)
               .map((row, index) => (
                 <TableRow
@@ -144,11 +141,11 @@ export default function ReserveTable() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   {
-                    tablerows.map((cell, index) =>
+                    row.map((cell, index) =>
                       index === 0 ?
-                        <TableCell component="th" scope="row" key={cell + index} sx={{ py: 0 }}>
+                        <TableCell component="th" scope="row" key={cell + index} sx={{ py: 1, px: 1 }}>
                           <Typography variant="caption">
-                            {row + cell}
+                            {cell}
                           </Typography>
                         </TableCell>
                         : index === tablerows.length - 1 ?
