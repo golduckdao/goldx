@@ -5,10 +5,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
 import { useTheme } from '@mui/material/styles';
 
-
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 
 import swap from "../assets/images/swap.svg";
 import rewards from "../assets/images/rewards.svg";
@@ -16,6 +18,9 @@ import services from "../assets/images/services.svg";
 import extensions from "../assets/images/extensions.svg";
 import docs from "../assets/images/docs.svg";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMoralis } from 'react-moralis';
+import { textAlign } from '@mui/system';
+import { useMediaQuery } from '@mui/material';
 
 const LINKS= [
   {
@@ -50,14 +55,14 @@ const drawerWidth = 200;
 export default function ResponsiveDrawer(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { window, mobileOpen, handleDrawerToggle } = props;
+  const { window, mobileOpen, handleDrawerToggle, login, toggleChainSwitch } = props;
   
   const theme = useTheme();
 
-  
+  const {isAuthenticated, logout, user} = useMoralis();
+  const view = useMediaQuery(theme.breakpoints.down('sm'));
 
-
-  const drawer = (
+  const drawer =  (
     <div>
       {/* <Divider /> */}
       <List>
@@ -69,15 +74,17 @@ export default function ResponsiveDrawer(props) {
             ":hover":{
               background: `${theme.palette.primary.light}20`
             },
-            background: location.pathname === link.link ? theme.palette.primary.main : 'none'
-            
+            background: location.pathname === link.link ? `${theme.palette.primary.dark}50` : 'none',
+            display: 'flex',
+            justifyContent: view ? 'center' : 'flex-start',
+            alignItems: 'center'
             }}
             onClick={() => navigate(link.link)}
             >
               <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
                 <img src={link.img} alt={link.name+" image"}/>
               </ListItemIcon>
-              <ListItemText primary={link.name}/>
+              <Typography>{link.name}</Typography>
             </ListItemButton>
           </ListItem>
         ))}
@@ -91,7 +98,6 @@ export default function ResponsiveDrawer(props) {
     <Box
       component="nav"
       sx={{ mt: {xs: 3},background: 'none' , flexShrink: { sm: 0 } }}
-      aria-label="mailbox folders"
     >
       {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Drawer
@@ -114,6 +120,28 @@ export default function ResponsiveDrawer(props) {
           },
         }}
       >
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1}}>
+          <Button variant="contained" 
+            sx={{
+              border: '1px solid #172C47',
+              borderRadius: theme.spacing(2),
+              py:2,
+              px: 2,
+              textTransform: 'none',
+            }}
+            startIcon={<AccountBalanceWalletOutlinedIcon sx={{color: '#39D0D8CC'}}/>}
+            onClick={ isAuthenticated ? () => logout() : () => login()}
+          >
+            {
+              isAuthenticated ? `Disconnect 0x...${user.get("ethAddress").slice(user.get("ethAddress").length-5,user.get("ethAddress").length)}` : 'Connect Wallet'
+            }
+          </Button>
+        </Box>
+        <ButtonBase onClick={toggleChainSwitch}>
+          <Typography variant='subtitle' color="text.secondary">
+            Switch to Network
+          </Typography>
+        </ButtonBase>
         {drawer}
       </Drawer>
       <Drawer

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Typography, Box, Tabs, Tab } from "@mui/material";
+import { Typography, Box, Tabs, Tab, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import BlueButton from '../components/BlueButton';
 import TabPanel from '../components/TabPanel';
@@ -91,6 +91,20 @@ const Rewards = () => {
         </Box>
       </Box>
       
+    </Box>
+    <Box sx={{
+      display: {xs: 'block', sm: 'none'},
+      background: 'none',
+    }}>
+      <Tabs value={value} onChange={handleChange} centered TabIndicatorProps={{style: { display: 'none'}}}>
+        <Tab label="My Rewards" sx={{textTransform: 'none', fontWeight: 700, fontSize: theme.spacing(2), color: theme.palette.common.white, '&.Mui-selected': { color: theme.palette.rewardsTab}}}/>
+        <Tab label="Overview" sx={{textTransform: 'none', fontWeight: 700, fontSize: theme.spacing(2), color: theme.palette.common.white, '&.Mui-selected': { color: theme.palette.rewardsTab}}}/>
+        <Tab label="Settings" sx={{textTransform: 'none', fontWeight: 700, fontSize: theme.spacing(2), color: theme.palette.common.white, '&.Mui-selected': { color: theme.palette.rewardsTab}}}/>
+      </Tabs>
+      <Divider />
+      <Typography align="center" mb={2} mt={1}><b>Name</b></Typography>
+      <Typography align="center" mb={1}>SHIB</Typography>
+      <Divider />
     </Box>
     </>
   )

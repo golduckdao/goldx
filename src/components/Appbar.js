@@ -20,14 +20,20 @@ import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
 import SwitchChainDialog from './SwitchChainDialog';
+import ResponsiveDrawer from './ResponsiveDrawer';
 
-export default function Appbar({toggleMobileDrawer}) {
+export default function Appbar() {
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
   const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
   console.log("Is Auth?", isAuthenticated)
+  
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
   React.useEffect(() => {
     async function fetchBalance() {
       if(isAuthenticated) {
@@ -76,6 +82,7 @@ export default function Appbar({toggleMobileDrawer}) {
   }
 
   return (
+    <>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{background: {xs: theme.palette.primary.dark, sm: `none`}}} elevation={0}>
         <Toolbar sx={{ 
@@ -123,7 +130,7 @@ export default function Appbar({toggleMobileDrawer}) {
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            onClick={toggleMobileDrawer}
+            onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
@@ -132,5 +139,12 @@ export default function Appbar({toggleMobileDrawer}) {
       </AppBar>
       <SwitchChainDialog open={switchChainDialog} onClose={() => setSwitchChainDialog(false)}/>
     </Box>
+    <ResponsiveDrawer
+      mobileOpen={mobileOpen}
+      handleDrawerToggle={handleDrawerToggle}
+      login={login}
+      toggleChainSwitch={() => setSwitchChainDialog(true)}
+    />
+    </>
   );
 }

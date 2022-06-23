@@ -26,7 +26,8 @@ const BuySmallViewport = () => {
       <Tabs value={value} onChange={(e, v) => setValue(v)}
       sx={{
         background: 'rgba(12, 11, 41, 0.6)',
-        borderRadius: '25px'
+        borderRadius: '25px',
+        mt: 4
       }}
       TabIndicatorProps={{ 
         style: {
