@@ -24,8 +24,8 @@ export default function ReserveTable() {
   const [tablerows, setTablerows] = React.useState([]);
   const { isAuthenticated, account, Moralis, isWeb3Enabled} = useMoralis();
   const headers = [
-    'Date',
-    'Reserve Tokens',
+    'Lock Date',
+    'Reserved Tokens',
     'Unlock Date',
     ''
   ];
@@ -47,11 +47,11 @@ export default function ReserveTable() {
         userTickets.forEach(ticket => promiseArr.push(buyTokenContract.userLockInfo(ticket)));
         let rows = (await Promise.all(promiseArr))
         .map(({
-          sale,
+          unLockedTime,
           lockedAmount,
           lockedTime
         }, index) => ({
-          sale: parseInt(sale.toString()) ? "Market Price" : "Fixed Process",
+          unlockedTime: new Date(parseInt(unLockedTime.mul(1000).toString())),
           lockedAmount: ethers.utils.formatEther(lockedAmount.toString()),
           lockedTime: new Date(parseInt(lockedTime.mul(1000).toString())),
           action: <Button 
@@ -61,10 +61,10 @@ export default function ReserveTable() {
             <b>Claim</b>
           </Button>
         }))
-        .map(({sale, lockedAmount, lockedTime}) => [
-          sale,
+        .map(({unlockedTime, lockedAmount, lockedTime}) => [
+          `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth()}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`,
           lockedAmount,
-          `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth()}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`
+          `${unlockedTime.getUTCDate().toString()}/${unlockedTime.getUTCMonth()}/${unlockedTime.getUTCFullYear()} - ${unlockedTime.getUTCHours()}:${unlockedTime.getUTCMinutes()}`,
         ]);
 
         setTablerows(rows);
@@ -92,7 +92,7 @@ export default function ReserveTable() {
     <>
     <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
       <Typography>
-        <b>Lock Records</b>
+        <b>Locked Records</b>
       </Typography>
       <Button sx={{ color: '#33AEC1'}} onClick={handleMultiClaim}>
         <b>

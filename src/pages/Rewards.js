@@ -118,10 +118,6 @@ const Rewards = () => {
       <TabPanel value={value} index={2} boxSx={{px: 0}}>
         <SettingsMobile />
       </TabPanel>
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 3}}>
-        <BlueButton onClick={handleClaimAll}>Claim All Rewards</BlueButton>
-      </Box>
     </Box>
     </>
   )

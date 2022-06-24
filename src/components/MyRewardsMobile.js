@@ -4,6 +4,8 @@ import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
+import { Box } from '@mui/material';
+import BlueButton from '../components/BlueButton';
 
 const HEADERS = [
   'Name',
@@ -129,11 +131,32 @@ const MyRewardsMobile = () => {
 
     fetchData()
 
-  }, [isAuthenticated, isWeb3Enabled])
+  }, [isAuthenticated, isWeb3Enabled]);
 
+  const handleClaimAll = async () => {
+    if(isAuthenticated) {
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+
+      // console.log("Signer", await signer.getAddress())
+      // console.log("Totality", t)
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.multipleRewardClaimByUser();
+    } 
+    // else if( !isWeb3Enabled) {const t = await Moralis.enableWeb3(); console.log("Awaiting", isWeb3Enabled)}
+  }
 
   return (
+    <>
     <MobileTable headers={HEADERS} rows={tablerows} isLoading={isLoading}/>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pt: 3}}>
+      <BlueButton onClick={handleClaimAll}>Claim All Rewards</BlueButton>
+    </Box>
+    </>
   )
 }
 

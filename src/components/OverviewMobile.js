@@ -1,10 +1,14 @@
 import React from 'react'
 import { useMoralis } from 'react-moralis';
 
+import Box from "@mui/material/Box";
+
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
+
 import MobileTable from './MobileTable';
+import BlueButton from '../components/BlueButton';
 
 const HEADERS = [
   'Name',
@@ -121,8 +125,27 @@ const OverviewMobile = () => {
 
   }, [isAuthenticated, Moralis.provider, account]);
 
+  const handleUpdateBalance = async () => {
+    if(isAuthenticated){
+
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.updateBalance();
+    }
+  };
+
   return (
+    <>
     <MobileTable headers={HEADERS} rows={tablerows} isLoading={isLoading}/>
+    <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
+      <BlueButton onClick={handleUpdateBalance}>Update Balance</BlueButton>
+    </Box>
+    </>
   )
 }
 

@@ -1,5 +1,8 @@
 import React from 'react'
-import MobileTable from './MobileTable'
+import Box from "@mui/material/Box";
+
+import MobileTable from './MobileTable';
+import BlueButton from '../components/BlueButton';
 
 import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
@@ -18,7 +21,7 @@ const HEADERS = [
 const SettingsMobile = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  // const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
+  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
   const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
   const { isAuthenticated, account, Moralis } = useMoralis();
 
@@ -121,8 +124,25 @@ const SettingsMobile = () => {
 
   }, [isAuthenticated]);
 
+  const handleGenerateRewards = async () => {
+    if(isAuthenticated) {
+      const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      const signer = provider.getSigner(account);
+      const rewardPoolContract = new ethers.Contract(
+        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAbi,
+        signer
+      );
+      await rewardPoolContract.generateBuyBackForOpen();
+    }
+  }
   return (
+    <>
     <MobileTable headers={HEADERS} rows={tablerows} isLoading={isLoading}/>
+    <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
+      <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).mul(1000).toString()) > Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
+    </Box>
+    </>
   )
 }
 

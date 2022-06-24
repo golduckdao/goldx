@@ -53,11 +53,11 @@ const MobileTable = ({headers=[], rows=[], key="d", isLoading=false}) => {
           <ChevronLeftSharpIcon />
         </IconButton>
         <Box sx={{ border: '1px solid #fff', px: 2, py: 1, borderRadius: 2 }}>
-          1
+          {page + 1}
         </Box>
         <IconButton sx={{ background: '#131A36', ml: 1, borderRadius: 2 }}
           onClick={() => setPage(prev=> prev + 1)}
-          disabled={page >= rows}
+          disabled={page >= rows.length}
         >
           <ChevronRightSharpIcon />
         </IconButton>
