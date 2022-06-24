@@ -12,7 +12,6 @@ const HEADERS = [
   'Total Rewarded',
   'Claimable',
   'Next Claim',
-  'Action'
 ]
 
 const MyRewardsMobile = () => {
