@@ -9,8 +9,10 @@ import { useMoralis } from 'react-moralis';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { ethers } from 'ethers';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import useStore from '../store/store';
 
 const Referral = () => {
+  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress)
   const [isReferral, setIsReferral] = useState(true);
   const [chainTokenEarned, setChainTokenEarned] = useState(0);
   const [nativeTokenEarned, setNativeTokenEarned] = useState(0);
@@ -25,7 +27,7 @@ const Referral = () => {
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
 
         const buyTokenContract = new ethers.Contract(
-          "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+          buyTokenContractAddress,
           buyTokenABI,
           provider
         );

@@ -30,39 +30,24 @@ const MobileTable = ({headers=[], rows=[], key="d", isLoading=false}) => {
       </>
       )
     }
-      {/* <Typography align="center" mb={2} mt={1}><b>Name</b></Typography>
-      <Typography align="center" mb={1}>SHIB</Typography>
-      <Divider />
-      <Typography align="center" mb={2} mt={1}><b>Current Status</b></Typography>
-      <Typography align="center" mb={1}>SHIB</Typography>
-      <Divider />
-      <Typography align="center" mb={2} mt={1}><b>Total Rewarded</b></Typography>
-      <Typography align="center" mb={1}>SHIB</Typography>
-      <Divider />
-      <Typography align="center" mb={2} mt={1}><b>Claimable</b></Typography>
-      <Typography align="center" mb={1}>SHIB</Typography>
-      <Divider />
-      <Typography align="center" mb={2} mt={1}><b>Next Claim</b></Typography>
-      <Typography align="center" mb={1}>Next</Typography>
-      <Divider /> */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4}}>
-        <IconButton sx={{ background: '#131A36', mr: 1, borderRadius: 2 }}
-        onClick={() => setPage(prev=> prev - 1)}
-        disabled={page === 0}
-        >
-          <ChevronLeftSharpIcon />
-        </IconButton>
-        <Box sx={{ border: '1px solid #fff', px: 2, py: 1, borderRadius: 2 }}>
-          {page + 1}
-        </Box>
-        <IconButton sx={{ background: '#131A36', ml: 1, borderRadius: 2 }}
-          onClick={() => setPage(prev=> prev + 1)}
-          disabled={page >= rows.length}
-        >
-          <ChevronRightSharpIcon />
-        </IconButton>
-
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4}}>
+      <IconButton sx={{ background: '#131A36', mr: 1, borderRadius: 2 }}
+      onClick={() => setPage(prev=> prev - 1)}
+      disabled={page === 0}
+      >
+        <ChevronLeftSharpIcon />
+      </IconButton>
+      <Box sx={{ border: '1px solid #fff', px: 2, py: 1, borderRadius: 2 }}>
+        {page + 1}
       </Box>
+      <IconButton sx={{ background: '#131A36', ml: 1, borderRadius: 2 }}
+        onClick={() => setPage(prev=> prev + 1)}
+        disabled={page >= rows.length}
+      >
+        <ChevronRightSharpIcon />
+      </IconButton>
+
+    </Box>
     </>
   )
 }

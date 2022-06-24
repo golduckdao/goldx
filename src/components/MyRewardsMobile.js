@@ -6,6 +6,7 @@ import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
 import { Box } from '@mui/material';
 import BlueButton from '../components/BlueButton';
+import useStore from '../store/store';
 
 const HEADERS = [
   'Name',
@@ -17,6 +18,7 @@ const HEADERS = [
 ]
 
 const MyRewardsMobile = () => {
+  const rewardPoolContractAddress = useStore(state => state.rewardPoolContractAddress);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
   const { isAuthenticated, account, Moralis, isWeb3Enabled } = useMoralis();
@@ -38,7 +40,7 @@ const MyRewardsMobile = () => {
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
         const rewardPoolContract = new ethers.Contract(
-          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAddress,
           rewardPoolContractAbi,
           signer
         );
@@ -141,7 +143,7 @@ const MyRewardsMobile = () => {
       // console.log("Signer", await signer.getAddress())
       // console.log("Totality", t)
       const rewardPoolContract = new ethers.Contract(
-        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAddress,
         rewardPoolContractAbi,
         signer
       );

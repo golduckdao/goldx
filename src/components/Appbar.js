@@ -21,13 +21,14 @@ import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
 import SwitchChainDialog from './SwitchChainDialog';
 import ResponsiveDrawer from './ResponsiveDrawer';
+import useStore from '../store/store';
 
 export default function Appbar() {
+  const rewardPoolContractAddress = useStore(state=>state.rewardPoolContractAddress);
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
   const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
-  console.log("Is Auth?", isAuthenticated)
   
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -37,7 +38,6 @@ export default function Appbar() {
   React.useEffect(() => {
     async function fetchBalance() {
       if(isAuthenticated) {
-        console.log("Executing")
         // try{
         //   if(!isWeb3Enabled) await Moralis.enableWeb3();
         // } catch(e) {
@@ -50,7 +50,7 @@ export default function Appbar() {
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
         const rewardPoolContract = new ethers.Contract(
-          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAddress,
           rewardPoolContractAbi,
           signer
         );

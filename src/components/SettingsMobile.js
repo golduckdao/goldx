@@ -8,6 +8,7 @@ import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { BigNumber, ethers } from 'ethers';
+import useStore from '../store/store';
 
 const HEADERS = [
   'Name',
@@ -19,6 +20,7 @@ const HEADERS = [
 ];
 
 const SettingsMobile = () => {
+  const rewardPoolContractAddress = useStore(state=>state.rewardPoolContractAddress);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
   const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
@@ -45,7 +47,7 @@ const SettingsMobile = () => {
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
         const rewardPoolContract = new ethers.Contract(
-          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAddress,
           rewardPoolContractAbi,
           signer
         );
@@ -129,7 +131,7 @@ const SettingsMobile = () => {
       const provider = new ethers.providers.Web3Provider(Moralis.provider);
       const signer = provider.getSigner(account);
       const rewardPoolContract = new ethers.Contract(
-        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAddress,
         rewardPoolContractAbi,
         signer
       );

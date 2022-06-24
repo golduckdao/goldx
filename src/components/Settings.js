@@ -10,6 +10,7 @@ import { BigNumber, ethers } from 'ethers';
 
 import CustomTable from './CustomTable'
 import BlueButton from '../components/BlueButton';
+import useStore from '../store/store';
 
 const HEADERS = [
   'Name',
@@ -21,6 +22,7 @@ const HEADERS = [
 ]
 
 const Settings = () => {
+  const rewardPoolContractAddress = useStore(state => state.rewardPoolContractAddress);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
   const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
@@ -47,7 +49,7 @@ const Settings = () => {
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
         const rewardPoolContract = new ethers.Contract(
-          "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+          rewardPoolContractAddress,
           rewardPoolContractAbi,
           signer
         );
@@ -131,7 +133,7 @@ const Settings = () => {
       const provider = new ethers.providers.Web3Provider(Moralis.provider);
       const signer = provider.getSigner(account);
       const rewardPoolContract = new ethers.Contract(
-        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAddress,
         rewardPoolContractAbi,
         signer
       );

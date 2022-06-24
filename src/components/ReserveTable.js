@@ -16,9 +16,11 @@ import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import BlueButton from './BlueButton';
+import useStore from '../store/store';
 
 
 export default function ReserveTable() {
+  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress);
   const [isLoading, setIsLoading] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [tablerows, setTablerows] = React.useState([]);
@@ -38,7 +40,7 @@ export default function ReserveTable() {
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const signer = provider.getSigner(account);
         const buyTokenContract = new ethers.Contract(
-          "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+          buyTokenContractAddress,
           buyTokenABI,
           signer
         );
@@ -80,7 +82,7 @@ export default function ReserveTable() {
       const provider = new ethers.providers.Web3Provider(Moralis.provider);
       const signer = provider.getSigner(account);
       const buyTokenContract = new ethers.Contract(
-        "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+        buyTokenContractAddress,
         buyTokenABI,
         signer
       );

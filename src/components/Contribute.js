@@ -9,8 +9,10 @@ import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { debounce } from 'lodash';
+import useStore from '../store/store';
 
 const Contribute = ({setDiscountRate, address}) => {
+  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress);
   const theme = useTheme();
   const { isAuthenticated, isWeb3Enabled, account, Moralis} = useMoralis();
 
@@ -28,7 +30,7 @@ const Contribute = ({setDiscountRate, address}) => {
     if(!isWeb3Enabled) await Moralis.enableWeb3();
     const provider = new ethers.providers.Web3Provider(Moralis.provider);
     const buyTokenContract = new ethers.Contract(
-      "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+      buyTokenContractAddress,
       buyTokenABI,
       provider
     );
@@ -50,7 +52,7 @@ const Contribute = ({setDiscountRate, address}) => {
       const provider = new ethers.providers.Web3Provider(Moralis.provider);
       const signer = provider.getSigner(account)
       const buyTokenContract = new ethers.Contract(
-        "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+        buyTokenContractAddress,
         buyTokenABI,
         signer
       );
@@ -72,7 +74,7 @@ const Contribute = ({setDiscountRate, address}) => {
         if(!isWeb3Enabled) await Moralis.enableWeb3();
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const buyTokenContract = new ethers.Contract(
-          "0x936c31F6316262632A677815aCe93FDf2f8143b3",
+          buyTokenContractAddress,
           buyTokenABI,
           provider
         );
