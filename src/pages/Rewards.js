@@ -10,6 +10,11 @@ import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 
+import MobileTable from '../components/MobileTable';
+import MyRewardsMobile from '../components/MyRewardsMobile';
+import OverviewMobile from '../components/OverviewMobile';
+import SettingsMobile from '../components/SettingsMobile';
+
 const Rewards = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
@@ -102,9 +107,21 @@ const Rewards = () => {
         <Tab label="Settings" sx={{textTransform: 'none', fontWeight: 700, fontSize: theme.spacing(2), color: theme.palette.common.white, '&.Mui-selected': { color: theme.palette.rewardsTab}}}/>
       </Tabs>
       <Divider />
-      <Typography align="center" mb={2} mt={1}><b>Name</b></Typography>
-      <Typography align="center" mb={1}>SHIB</Typography>
-      <Divider />
+      <TabPanel value={value} index={0} boxSx={{px: 0}}>
+        <MyRewardsMobile />
+      </TabPanel>
+      
+      <TabPanel value={value} index={1} boxSx={{px: 0}}>
+        <OverviewMobile />
+      </TabPanel>
+      
+      <TabPanel value={value} index={2} boxSx={{px: 0}}>
+        <SettingsMobile />
+      </TabPanel>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 3}}>
+        <BlueButton onClick={handleClaimAll}>Claim All Rewards</BlueButton>
+      </Box>
     </Box>
     </>
   )

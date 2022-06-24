@@ -1,11 +1,6 @@
-import React from 'react'
-
+import React from 'react';
+import MobileTable from './MobileTable';
 import { useMoralis } from 'react-moralis';
-
-import { Typography, Box} from "@mui/material";
-import CustomTable from './CustomTable';
-import BlueButton from './BlueButton';
-
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
@@ -20,14 +15,10 @@ const HEADERS = [
   'Action'
 ]
 
-const MyRewards = () => {
+const MyRewardsMobile = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const [rewarded, setRewarded] = React.useState(0);
-  const [claimable, setClaimable] = React.useState(0);
-  const { isAuthenticated, isAuthenticating, user, account, Moralis, isWeb3Enabled } = useMoralis();
-
-  // console.log("Signer", await signer.getAddress())
+  const { isAuthenticated, account, Moralis, isWeb3Enabled } = useMoralis();
 
   React.useEffect(() => {
     async function fetchData() {
@@ -114,7 +105,6 @@ const MyRewards = () => {
 
         const nextClaim = (await Promise.all(promiseArr)).map(({nextClaimTime}) => nextClaimTime.mul(1000).toString());
 
-        let tr = 0, tc = 0; 
         for(let i = 0 ; i < totalTokens ; i++){
           let d = nextClaim[i] === '0' ? 'N/A' : new Date(parseInt(nextClaim[i]));
 
@@ -124,18 +114,13 @@ const MyRewards = () => {
             tokenNames[i],
             nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
             nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth()}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
-            <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>
-              Claim
-            </BlueButton>
+            // <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>
+            //   Claim
+            // </BlueButton>
           ]);
-          tr += parseFloat(totalRewarded[i]);
-          tc += parseFloat(claimable[i]);
         }
-        
-        setRewarded(tr.toFixed(2));
-        setClaimable(tc.toFixed(2));
         setTablerows(rows)
-        setIsLoading(prev => false)
+        setIsLoading(false)
 
       }
 
@@ -147,19 +132,10 @@ const MyRewards = () => {
 
   }, [isAuthenticated, isWeb3Enabled])
 
+
   return (
-    <>
-    <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="my-rewards"/>
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2}}>
-      <Typography mr={2}>Total Tokens Rewarded: </Typography>
-      <Typography>{rewarded}</Typography>
-    </Box>
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <Typography mr={2}>Total Tokens Claimable: </Typography>
-      <Typography>{claimable}</Typography>
-    </Box>
-    </>
+    <MobileTable headers={HEADERS} rows={tablerows} isLoading={isLoading}/>
   )
 }
 
-export default MyRewards
+export default MyRewardsMobile

@@ -79,7 +79,7 @@ export default function ResponsiveDrawer(props) {
             justifyContent: view ? 'center' : 'flex-start',
             alignItems: 'center'
             }}
-            onClick={() => navigate(link.link)}
+            onClick={() => {navigate(link.link); handleDrawerToggle();}}
             >
               <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
                 <img src={link.img} alt={link.name+" image"}/>

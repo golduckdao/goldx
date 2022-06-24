@@ -1,15 +1,10 @@
 import React from 'react'
-
-import Box from "@mui/material/Box";
+import MobileTable from './MobileTable'
 
 import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { BigNumber, ethers } from 'ethers';
-
-
-import CustomTable from './CustomTable'
-import BlueButton from '../components/BlueButton';
 
 const HEADERS = [
   'Name',
@@ -18,12 +13,12 @@ const HEADERS = [
   'Claim Wait',
   'Buyback Wait',
   'Active'
-]
+];
 
-const Settings = () => {
+const SettingsMobile = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
+  // const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
   const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
   const { isAuthenticated, account, Moralis } = useMoralis();
 
@@ -52,9 +47,9 @@ const Settings = () => {
           signer
         );
 
-        const l = await rewardPoolContract.lastBuyBackTimestamp();
+        // const l = await rewardPoolContract.lastBuyBackTimestamp();
         const b = await rewardPoolContract.buyBackWait();
-        setLastBuyBackTimestamp(l);
+        // setLastBuyBackTimestamp(l);
         setBuyBackWait(b);
 
         let promiseArr = [], results;
@@ -114,7 +109,7 @@ const Settings = () => {
         // console.log("Rows", rows);
 
         setTablerows(rows)
-        setIsLoading(prev => false)
+        setIsLoading(false)
 
       }
 
@@ -126,27 +121,9 @@ const Settings = () => {
 
   }, [isAuthenticated]);
 
-  const handleGenerateRewards = async () => {
-    if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
-      const rewardPoolContract = new ethers.Contract(
-        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
-        rewardPoolContractAbi,
-        signer
-      );
-      await rewardPoolContract.generateBuyBackForOpen();
-    }
-  }
-
   return (
-    <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).mul(1000).toString()) > Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
-      </Box>
-      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="settings"/>
-    </>
+    <MobileTable headers={HEADERS} rows={tablerows} isLoading={isLoading}/>
   )
 }
 
-export default Settings
+export default SettingsMobile
