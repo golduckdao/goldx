@@ -47,7 +47,11 @@ export default function ReserveTable() {
         let userTickets = await buyTokenContract.getUserAllLockTickets(account);
         let promiseArr = [];
         userTickets.forEach(ticket => promiseArr.push(buyTokenContract.userLockInfo(ticket)));
-        let rows = (await Promise.all(promiseArr))
+        let rows = (await Promise.all(promiseArr));
+        
+        console.log("Reserve Table", rows);
+
+        rows = rows
         .map(({
           unLockedTime,
           lockedAmount,
@@ -63,11 +67,16 @@ export default function ReserveTable() {
             <b>Claim</b>
           </Button>
         }))
+        
+        console.log("During Processing", rows);
+
+        rows = rows
         .map(({unlockedTime, lockedAmount, lockedTime}) => [
           `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth() + 1}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`,
           lockedAmount,
           `${unlockedTime.getUTCDate().toString()}/${unlockedTime.getUTCMonth() + 1}/${unlockedTime.getUTCFullYear()} - ${unlockedTime.getUTCHours()}:${unlockedTime.getUTCMinutes()}`,
         ]);
+        console.log("After Processing", rows);
 
         setTablerows(rows);
         setIsLoading(false);

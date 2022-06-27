@@ -87,7 +87,11 @@ const Settings = () => {
           promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
         }
 
-        let rewardInfoRows = (await Promise.all(promiseArr)).map(({
+        let rewardInfoRows = (await Promise.all(promiseArr));
+
+        console.log("Rewards Info Fetched", rewardInfoRows);
+
+        rewardInfoRows = rewardInfoRows.map(({
           minimumTokenBalanceForRewards,
           distributeShare,
           claimWait,
@@ -96,12 +100,13 @@ const Settings = () => {
         }) => ([
           parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
           distributeShare.toString(),
-          parseFloat(claimWait.toString()) / (60 * 24),
+          `${parseFloat(claimWait.div(60*60*24).toString())} Day(s)`,
           // parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
           isRemoved ? "Yes" : "No",
           isActive ? "Yes" : "No",
 
         ]));
+        console.log("Rewards Info Processed", rewardInfoRows);
 
 
         for (let i = 0; i < tokenNames.length; i++) {
