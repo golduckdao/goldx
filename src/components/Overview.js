@@ -90,14 +90,14 @@ const Overview = () => {
           promiseArr.push(rewardPoolContract.getTotalRewardsDistributed(tokenAddresses[i]));
         }
 
-        const totalDistributed = (await Promise.all(promiseArr)).map(each => parseFloat(ethers.utils.formatEther(each.toString())).toFixed(2));
+        const totalDistributed = (await Promise.all(promiseArr)).map(each => parseFloat(ethers.utils.formatEther(each.toString())).toFixed(16));
 
         promiseArr = [];
         for (let i = 0; i < totalTokens; i++) {
           promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
         }
 
-        let totalGenerated = (await Promise.all(promiseArr)).map(({totalRewardsDistributed}) => parseFloat(ethers.utils.formatEther(totalRewardsDistributed.toString())).toFixed(2));
+        let totalGenerated = (await Promise.all(promiseArr)).map(({totalRewardsDistributed}) => parseFloat(ethers.utils.formatEther(totalRewardsDistributed.toString())).toFixed(16));
 
         promiseArr = [];
         for (let i = 0; i < totalTokens; i++) {

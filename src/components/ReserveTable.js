@@ -64,9 +64,9 @@ export default function ReserveTable() {
           </Button>
         }))
         .map(({unlockedTime, lockedAmount, lockedTime}) => [
-          `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth()}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`,
+          `${lockedTime.getUTCDate().toString()}/${lockedTime.getUTCMonth() + 1}/${lockedTime.getUTCFullYear()} - ${lockedTime.getUTCHours()}:${lockedTime.getUTCMinutes()}`,
           lockedAmount,
-          `${unlockedTime.getUTCDate().toString()}/${unlockedTime.getUTCMonth()}/${unlockedTime.getUTCFullYear()} - ${unlockedTime.getUTCHours()}:${unlockedTime.getUTCMinutes()}`,
+          `${unlockedTime.getUTCDate().toString()}/${unlockedTime.getUTCMonth() + 1}/${unlockedTime.getUTCFullYear()} - ${unlockedTime.getUTCHours()}:${unlockedTime.getUTCMinutes()}`,
         ]);
 
         setTablerows(rows);

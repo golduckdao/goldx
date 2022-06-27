@@ -115,8 +115,8 @@ const MyRewardsMobile = () => {
 
           rows.push([
             tokenNames[i],
-            nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
-            nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth()}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
+            nativeAssetBalance.gte(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
+            nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
             // <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>
             //   Claim
             // </BlueButton>

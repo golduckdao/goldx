@@ -9,12 +9,14 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Rewards from "./pages/Rewards";
 import BuyToken from "./pages/BuyToken";
 import { useMoralis } from "react-moralis";
+import { ethers } from 'ethers';
 
 function App() {
   const {Moralis, isWeb3Enabled} = useMoralis();
 
   React.useEffect(() => {
     async function initialize() {
+      if(window.ethereum) window.ethereum.on('chainChanged', (chainId) => window.location.reload());
       await Moralis.enableWeb3();
     }
     initialize();

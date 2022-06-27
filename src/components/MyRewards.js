@@ -8,7 +8,7 @@ import BlueButton from './BlueButton';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import useStore from '../store/store';
 
 const HEADERS = [
@@ -124,8 +124,8 @@ const MyRewards = () => {
 
           rows.push([
             tokenNames[i],
-            nativeAssetBalance.gt(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
-            nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth()}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
+            nativeAssetBalance.gte(minTokenBalReqd[i]) ? "Eligible" : "Not Eligible", totalRewarded[i], claimable[i],
+            nextClaim[i] === '0' ? d : `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} - ${d.getUTCHours()}:${d.getUTCMinutes()}` ,
             <BlueButton onClick={() => rewardPoolContract.singleRewardClaimByUser(tokenAddresses[i])}>
               Claim
             </BlueButton>

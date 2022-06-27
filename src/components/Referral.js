@@ -51,7 +51,7 @@ const Referral = () => {
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 5}}>
         <Typography>
-          <b>Total Earned</b>                    
+          <b>Tokens Earned</b>                    
         </Typography>
         <Typography>{nativeTokenEarned}</Typography>
       </Box>
