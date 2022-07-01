@@ -133,7 +133,7 @@ const MyRewardsMobile = () => {
 
     fetchData()
 
-  }, [isAuthenticated, isWeb3Enabled]);
+  }, [isAuthenticated, rewardPoolContractAddress]);
 
   const handleClaimAll = async () => {
     if(isAuthenticated) {

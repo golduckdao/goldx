@@ -147,7 +147,7 @@ const MyRewards = () => {
 
     fetchData()
 
-  }, [isAuthenticated, isWeb3Enabled])
+  }, [isAuthenticated, rewardPoolContractAddress])
 
   return (
     <>

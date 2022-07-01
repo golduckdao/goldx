@@ -71,6 +71,7 @@ const Contribute = ({setDiscountRate, address}) => {
   React.useEffect(() => {
     async function fetchData(){
       if(isAuthenticated) {
+        console.log("CONTRIBUTE", isAuthenticated, isWeb3Enabled)
         if(!isWeb3Enabled) await Moralis.enableWeb3();
         const provider = new ethers.providers.Web3Provider(Moralis.provider);
         const buyTokenContract = new ethers.Contract(
@@ -83,7 +84,7 @@ const Contribute = ({setDiscountRate, address}) => {
         const currD = parseFloat((await buyTokenContract.currentDiscount()).toString());
         const currentSale = parseInt((await buyTokenContract.currentSale()).toString());
 
-        console.log("Data", mind, maxd, currD);
+        // console.log("Data", mind, maxd, currD);
         setMinDeposit(mind);
         setMaxDeposit(maxd);
         setDiscount(currD);
@@ -92,7 +93,7 @@ const Contribute = ({setDiscountRate, address}) => {
       }
     };
     fetchData()
-  }, [isAuthenticated, isWeb3Enabled])
+  }, [isAuthenticated, buyTokenContractAddress])
   return (
     <InnerBox paperSx={{p: {xs: 2, lg: 3}}}>
       <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2}}>

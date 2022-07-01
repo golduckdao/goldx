@@ -10,17 +10,35 @@ import Rewards from "./pages/Rewards";
 import BuyToken from "./pages/BuyToken";
 import { useMoralis } from "react-moralis";
 import { ethers } from 'ethers';
+import useStore from "./store/store";
 
 function App() {
   const {Moralis, isWeb3Enabled} = useMoralis();
-
+  const {switchBsc, switchPolygon, switchEth, bsc, polygon, eth, toggleChainDialog} = useStore(state => state);
   React.useEffect(() => {
     async function initialize() {
-      if(window.ethereum) window.ethereum.on('chainChanged', (chainId) => window.location.reload());
-      await Moralis.enableWeb3();
+      if(!isWeb3Enabled) await Moralis.enableWeb3();
+      let chain = await Moralis.getChainId();
+      if( chain === polygon.network) switchPolygon()
+      else if( chain === bsc.network) switchBsc()
+      else if( chain === eth.network) switchEth()
+      else toggleChainDialog();
     }
     initialize();
-  }, [isWeb3Enabled])
+    Moralis.onChainChanged((chainId) => {
+      // window.location.reload()
+      console.log("chain ID changed to:", chainId)
+      // chainId
+      // 0x13881 -> polygon testnet
+      // 0x61 -> BSC testnet
+      // 0x1 -> ETH Mainnet
+      // 0x4 -> ETH Rinkeby Testnet
+      if( chainId === polygon.network) switchPolygon()
+      else if( chainId === bsc.network) switchBsc()
+      else if( chainId === eth.network) switchEth()
+      else toggleChainDialog();
+    })
+  }, [])
   return (
     <div className="App"
     css={css`

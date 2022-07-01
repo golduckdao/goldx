@@ -14,7 +14,7 @@ import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalance
 
 import logo from "../assets/images/Logo.svg";
 import { ButtonBase } from '@mui/material';
-import { useMoralis } from 'react-moralis';
+import { useChain, useMoralis } from 'react-moralis';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
@@ -23,20 +23,24 @@ import SwitchChainDialog from './SwitchChainDialog';
 import ResponsiveDrawer from './ResponsiveDrawer';
 import useStore from '../store/store';
 
+
+
 export default function Appbar() {
-  const rewardPoolContractAddress = useStore(state=>state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, openSwitchChainDialog, toggleChainDialog} = useStore(state=>state);
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
   const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
   
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const {chainId} = useChain();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   React.useEffect(() => {
     async function fetchBalance() {
+      // console.log("Chain ID from App Bar", chainId);
       if(isAuthenticated) {
         // try{
         //   if(!isWeb3Enabled) await Moralis.enableWeb3();
@@ -106,10 +110,11 @@ export default function Appbar() {
             
           </Typography>
           <Box sx={{ display: {xs: 'none', sm: 'block'}}}>
-            <ButtonBase onClick={() => setSwitchChainDialog(true)}>
+            <ButtonBase onClick={() => toggleChainDialog()}>
               <Typography variant='subtitle' color="text.secondary">
                 Switch to Network
               </Typography>
+              {}
             </ButtonBase>
             <Button variant="contained" sx={{
               ml: 2,
@@ -137,13 +142,13 @@ export default function Appbar() {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <SwitchChainDialog open={switchChainDialog} onClose={() => setSwitchChainDialog(false)}/>
+      <SwitchChainDialog open={openSwitchChainDialog} onClose={toggleChainDialog}/>
     </Box>
     <ResponsiveDrawer
       mobileOpen={mobileOpen}
       handleDrawerToggle={handleDrawerToggle}
       login={login}
-      toggleChainSwitch={() => setSwitchChainDialog(true)}
+      toggleChainSwitch={toggleChainDialog}
     />
     </>
   );

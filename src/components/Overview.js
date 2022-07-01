@@ -118,7 +118,7 @@ const Overview = () => {
 
     fetchData()
 
-  }, [isAuthenticated, Moralis.provider, account]);
+  }, [isAuthenticated, rewardPoolContractAddress, account]);
 
   const handleUpdateBalance = async () => {
     if(isAuthenticated){

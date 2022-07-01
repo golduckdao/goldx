@@ -26,7 +26,7 @@ export default function ReserveTable() {
   const [tablerows, setTablerows] = React.useState([]);
   const { isAuthenticated, account, Moralis, isWeb3Enabled} = useMoralis();
   const headers = [
-    'Lock Date',
+    'Locked Date',
     'Reserved Tokens',
     'Unlock Date',
     ''
