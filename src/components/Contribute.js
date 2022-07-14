@@ -5,16 +5,17 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
 import InnerBox from "./InnerBox";
 import BlueButton from './BlueButton';
-import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { debounce } from 'lodash';
 import useStore from '../store/store';
 
 const Contribute = ({setDiscountRate, address}) => {
-  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress);
+  const {
+    buyTokenContractAddress,
+    isAuthenticated
+  } = useStore(state => state);
   const theme = useTheme();
-  const { isAuthenticated, isWeb3Enabled, account, Moralis} = useMoralis();
 
   const [isReferral, setIsReferral] = useState(true);
   const [minDeposit, setMinDeposit] = useState(0);
@@ -27,30 +28,30 @@ const Contribute = ({setDiscountRate, address}) => {
 
   const handleInput = debounce(async (e) => {
     let t = parseFloat(e.target.value) || 0, amount, discount;
-    if(!isWeb3Enabled) await Moralis.enableWeb3();
-    const provider = new ethers.providers.Web3Provider(Moralis.provider);
-    const buyTokenContract = new ethers.Contract(
-      buyTokenContractAddress,
-      buyTokenABI,
-      provider
-    );
-    if(currentSale) {
-      [amount, discount] = (await buyTokenContract.getAmountOutForMarketPrice(ethers.utils.parseEther(t.toString())));
-    } else {
-      [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
+    if(window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const buyTokenContract = new ethers.Contract(
+        buyTokenContractAddress,
+        buyTokenABI,
+        provider
+      );
+      if(currentSale) {
+        [amount, discount] = (await buyTokenContract.getAmountOutForMarketPrice(ethers.utils.parseEther(t.toString())));
+      } else {
+        [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
+      }
+
+      setIsReferral(await buyTokenContract.isReferral());
+      setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
+      setLockedValue(parseFloat(ethers.utils.formatEther(discount.toString())));
+      setValue(t);
     }
-    // let sum = parseFloat(ethers.utils.formatEther(amount.toString())) + parseFloat(ethers.utils.formatEther(discount.toString()));
-    setIsReferral(await buyTokenContract.isReferral());
-    setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
-    setLockedValue(parseFloat(ethers.utils.formatEther(discount.toString())));
-    setValue(t);
   }, 2000);
 
   const handleBuy = async () => {
     if(isAuthenticated) {
-      if(!isWeb3Enabled) await Moralis.enableWeb3();
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account)
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
       const buyTokenContract = new ethers.Contract(
         buyTokenContractAddress,
         buyTokenABI,
@@ -70,10 +71,8 @@ const Contribute = ({setDiscountRate, address}) => {
 
   React.useEffect(() => {
     async function fetchData(){
-      if(isAuthenticated) {
-        console.log("CONTRIBUTE", isAuthenticated, isWeb3Enabled)
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
+      if(isAuthenticated && window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const buyTokenContract = new ethers.Contract(
           buyTokenContractAddress,
           buyTokenABI,

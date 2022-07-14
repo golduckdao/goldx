@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { useMoralis } from 'react-moralis';
 
 import { Typography, Box} from "@mui/material";
 import CustomTable from './CustomTable';
@@ -8,7 +7,7 @@ import BlueButton from './BlueButton';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import useStore from '../store/store';
 
 const HEADERS = [
@@ -22,12 +21,11 @@ const HEADERS = [
 ]
 
 const MyRewards = () => {
-  const rewardPoolContractAddress = useStore(state => state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, isAuthenticated} = useStore(state => state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
   const [rewarded, setRewarded] = React.useState(0);
   const [claimable, setClaimable] = React.useState(0);
-  const { isAuthenticated, isAuthenticating, user, account, Moralis, isWeb3Enabled } = useMoralis();
 
   // console.log("Signer", await signer.getAddress())
 
@@ -38,12 +36,11 @@ const MyRewards = () => {
       // console.log("is Authenticated?", isAuthenticated);
 
       // console.log("account?", account);
-      if (isAuthenticated) {
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
+      if (isAuthenticated && window.ethereum) {
         
-        console.log(isWeb3Enabled)
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
+        const account = await signer.getAddress();
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -62,7 +59,7 @@ const MyRewards = () => {
         const nativeAssetBalance = await nativeAssetContract.balanceOf(account);
 
 
-        let promiseArr = [], results;
+        let promiseArr = [];
 
         for (let i = 0; i < 10; i++) {
           promiseArr.push(rewardPoolContract.rewardAssetAt(i))
@@ -120,7 +117,7 @@ const MyRewards = () => {
         for(let i = 0 ; i < totalTokens ; i++){
           let d = nextClaim[i] === '0' ? 'N/A' : new Date(parseInt(nextClaim[i]));
 
-          console.log("Next Claim for token", i, d);
+          // console.log("Next Claim for token", i, d);
 
           rows.push([
             tokenNames[i],
@@ -137,7 +134,7 @@ const MyRewards = () => {
         setRewarded(tr.toFixed(2));
         setClaimable(tc.toFixed(2));
         setTablerows(rows)
-        setIsLoading(prev => false)
+        setIsLoading(false)
 
       }
 

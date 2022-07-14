@@ -14,7 +14,6 @@ import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalance
 
 import logo from "../assets/images/Logo.svg";
 import { ButtonBase } from '@mui/material';
-import { useChain, useMoralis } from 'react-moralis';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
@@ -26,11 +25,18 @@ import useStore from '../store/store';
 
 
 export default function Appbar() {
-  const {rewardPoolContractAddress, openSwitchChainDialog, toggleChainDialog} = useStore(state=>state);
+  const {
+    rewardPoolContractAddress,
+    openSwitchChainDialog,
+    toggleChainDialog,
+    isAuthenticated, 
+    logout,
+    login
+  } = useStore(state=>state);
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
   const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
-  const { authenticate, isAuthenticated, isWeb3Enabled, user, account, logout, Moralis } = useMoralis();
+  const [account, setAccount] = React.useState('');
   
   const [mobileOpen, setMobileOpen] = React.useState(false);
   // const {chainId} = useChain();
@@ -41,15 +47,14 @@ export default function Appbar() {
   React.useEffect(() => {
     async function fetchBalance() {
       // console.log("Chain ID from App Bar", chainId);
-      if(isAuthenticated) {
+      if(isAuthenticated && window.ethereum) {
         // try{
         //   if(!isWeb3Enabled) await Moralis.enableWeb3();
         // } catch(e) {
         //   console.log("Moralis Error", e)
         // }
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -65,23 +70,20 @@ export default function Appbar() {
           erc20Abi,
           signer
         );
-        const nativeAssetBalance = await nativeAssetContract.balanceOf(user.get("ethAddress"));
+        const nativeAssetBalance = await nativeAssetContract.balanceOf(await signer.getAddress);
         setBalance(ethers.utils.formatEther(nativeAssetBalance.toString()));
       }
     }
     fetchBalance();
-  }, [isAuthenticated, isWeb3Enabled])
+  }, [isAuthenticated])
 
-  const login = async () => {
-    if (!isAuthenticated) {
-
-      await authenticate({signingMessage: "Welcome to the GoldX Portal"})
-        .then(function (user) {
-          if(user) console.log(user.get("ethAddress"));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+  const loginHandle = async () => {
+    if (!isAuthenticated && window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      await signer.signMessage("Welcome to the GoldX Portal");
+      login();
+      setAccount(await signer.getAddress());
     }
   }
 
@@ -124,10 +126,10 @@ export default function Appbar() {
               textTransform: 'none'
             }}
             startIcon={<AccountBalanceWalletOutlinedIcon sx={{color: '#39D0D8CC'}}/>}
-            onClick={ isAuthenticated ? () => logout() : () => login()}
+            onClick={ isAuthenticated ? () => logout() : () => loginHandle()}
             >
               {
-                isAuthenticated ? `Disconnect 0x...${user.get("ethAddress").slice(user.get("ethAddress").length-5,user.get("ethAddress").length)}` : 'Connect Wallet'
+                isAuthenticated ? `Disconnect 0x...${account.slice(account.length-5,account.length)}` : 'Connect Wallet'
               }
             </Button>
           </Box>
@@ -147,7 +149,7 @@ export default function Appbar() {
     <ResponsiveDrawer
       mobileOpen={mobileOpen}
       handleDrawerToggle={handleDrawerToggle}
-      login={login}
+      login={loginHandle}
       toggleChainSwitch={toggleChainDialog}
     />
     </>

@@ -2,7 +2,6 @@ import React from 'react'
 
 import Box from "@mui/material/Box";
 
-import { useMoralis } from 'react-moralis';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
@@ -22,10 +21,9 @@ const HEADERS = [
 ]
 
 const Overview = () => {
-  const rewardPoolContractAddress = useStore(state=>state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, isAuthenticated} = useStore(state=>state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, account, Moralis } = useMoralis();
 
 
   
@@ -39,11 +37,11 @@ const Overview = () => {
       // console.log("is Authenticated?", isAuthenticated);
 
       // console.log("account?", account);
-      if (isAuthenticated) {
+      if (isAuthenticated && window.ethereum) {
         let rows = [];
         // console.log("is loading?", isLoading)
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -111,20 +109,20 @@ const Overview = () => {
         }
         
         setTablerows(rows)
-        setIsLoading(prev => false)
+        setIsLoading(false)
 
       }
     }
 
     fetchData()
 
-  }, [isAuthenticated, rewardPoolContractAddress, account]);
+  }, [isAuthenticated, rewardPoolContractAddress]);
 
   const handleUpdateBalance = async () => {
     if(isAuthenticated){
 
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
       const rewardPoolContract = new ethers.Contract(
         rewardPoolContractAddress,
         rewardPoolContractAbi,

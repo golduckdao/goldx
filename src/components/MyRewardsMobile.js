@@ -1,6 +1,5 @@
 import React from 'react';
 import MobileTable from './MobileTable';
-import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { ethers } from 'ethers';
@@ -18,24 +17,18 @@ const HEADERS = [
 ]
 
 const MyRewardsMobile = () => {
-  const rewardPoolContractAddress = useStore(state => state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, isAuthenticated} = useStore(state => state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, account, Moralis, isWeb3Enabled } = useMoralis();
 
   React.useEffect(() => {
     async function fetchData() {
       let rows = [];
-      // console.log("is Authenticating?", isAuthenticating);
-      // console.log("is Authenticated?", isAuthenticated);
-
-      // console.log("account?", account);
-      if (isAuthenticated) {
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
+      if (isAuthenticated && window.ethereum) {
         
-        console.log(isWeb3Enabled)
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
+        const account = await signer.getAddress();
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -111,7 +104,7 @@ const MyRewardsMobile = () => {
         for(let i = 0 ; i < totalTokens ; i++){
           let d = nextClaim[i] === '0' ? 'N/A' : new Date(parseInt(nextClaim[i]));
 
-          console.log("Next Claim for token", i, d);
+          // console.log("Next Claim for token", i, d);
 
           rows.push([
             tokenNames[i],
@@ -137,8 +130,8 @@ const MyRewardsMobile = () => {
 
   const handleClaimAll = async () => {
     if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
 
       // console.log("Signer", await signer.getAddress())
       // console.log("Totality", t)

@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import MobileTable from './MobileTable';
 import BlueButton from '../components/BlueButton';
 
-import { useMoralis } from 'react-moralis';
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
 import { BigNumber, ethers } from 'ethers';
@@ -20,12 +19,11 @@ const HEADERS = [
 ];
 
 const SettingsMobile = () => {
-  const rewardPoolContractAddress = useStore(state=>state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, isAuthenticated} = useStore(state=>state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
+  const [lastBuyBackTimestamp, _] = React.useState(BigNumber.from(0));
   const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
-  const { isAuthenticated, account, Moralis } = useMoralis();
 
 
 
@@ -41,8 +39,8 @@ const SettingsMobile = () => {
       // console.log("account?", account);
       if (isAuthenticated) {
         // console.log("is loading?", isLoading)
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -57,7 +55,7 @@ const SettingsMobile = () => {
         // setLastBuyBackTimestamp(l);
         setBuyBackWait(b);
 
-        let promiseArr = [], results;
+        let promiseArr = [];
 
         for (let i = 0; i < 10; i++) {
           promiseArr.push(rewardPoolContract.rewardAssetAt(i))
@@ -130,8 +128,8 @@ const SettingsMobile = () => {
 
   const handleGenerateRewards = async () => {
     if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
       const rewardPoolContract = new ethers.Contract(
         rewardPoolContractAddress,
         rewardPoolContractAbi,

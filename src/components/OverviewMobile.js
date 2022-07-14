@@ -1,5 +1,4 @@
 import React from 'react'
-import { useMoralis } from 'react-moralis';
 
 import Box from "@mui/material/Box";
 
@@ -21,10 +20,9 @@ const HEADERS = [
 ]
 
 const OverviewMobile = () => {
-  const rewardPoolContractAddress = useStore(state => state.rewardPoolContractAddress);
+  const {rewardPoolContractAddress, isAuthenticated} = useStore(state => state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, account, Moralis } = useMoralis();
 
 
   
@@ -38,11 +36,12 @@ const OverviewMobile = () => {
       // console.log("is Authenticated?", isAuthenticated);
 
       // console.log("account?", account);
-      if (isAuthenticated) {
+      if (isAuthenticated && window.ethereum) {
         let rows = [];
         // console.log("is loading?", isLoading)
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
+
 
         // console.log("Signer", await signer.getAddress())
         // console.log("Totality", t)
@@ -125,13 +124,13 @@ const OverviewMobile = () => {
 
     fetchData()
 
-  }, [isAuthenticated, Moralis.provider, account]);
+  }, [isAuthenticated]);
 
   const handleUpdateBalance = async () => {
     if(isAuthenticated){
 
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
       const rewardPoolContract = new ethers.Contract(
         rewardPoolContractAddress,
         rewardPoolContractAbi,

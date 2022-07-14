@@ -13,7 +13,7 @@ const BuySmallViewport = () => {
   const theme = useTheme();
   const {user} = useParams();
   const [value, setValue] = useState(0);
-  const [discountRate, setDiscountRate] = useState(0);
+  const [_, setDiscountRate] = useState(0);
   return (
     <>
     <Box sx={{

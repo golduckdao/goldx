@@ -5,6 +5,7 @@ const useStore = create((set) => ({
   current: 'bsc',
   rewardPoolContractAddress: '0x885fE14F36226B04dB1a9D06BDE34935EB12b8d2',
   buyTokenContractAddress: '0xDB018d39569904FB7C86B98171c9d17e0C77E32B',
+  isAuthenticated: false,
 
   bsc: {
     network: '0x61',
@@ -22,6 +23,9 @@ const useStore = create((set) => ({
     buyTokenContractAddress: '0x14EB3d7Ee35E88915772d379713f152ba3b42B6B'
   },
   openSwitchChainDialog: false,
+
+  login: () => set((state) => ({...state, isAuthenticated: true})),
+  logout: () => set((state) => ({...state, isAuthenticated: false})),
   toggleChainDialog: () => set((state) =>({...state, openSwitchChainDialog: !state.openSwitchChainDialog})),
   switchBsc: () => set((state) => ({
     ...state,
