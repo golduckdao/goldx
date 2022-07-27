@@ -12,7 +12,7 @@ import { CircularProgress, IconButton, Box } from '@mui/material';
 
 import ChevronRightSharpIcon from '@mui/icons-material/ChevronRightSharp';
 import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
-import { useMoralis } from 'react-moralis';
+
 import { ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import BlueButton from './BlueButton';
@@ -20,11 +20,10 @@ import useStore from '../store/store';
 
 
 export default function ReserveTable() {
-  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress);
+  const {buyTokenContractAddress, isAuthenticated} = useStore(state => state);
   const [isLoading, setIsLoading] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [tablerows, setTablerows] = React.useState([]);
-  const { isAuthenticated, account, Moralis, isWeb3Enabled} = useMoralis();
   const headers = [
     'Locked Date',
     'Reserved Tokens',
@@ -36,9 +35,9 @@ export default function ReserveTable() {
   React.useEffect(() => {
     async function fetchData() {
       if(isAuthenticated) {
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
-        const signer = provider.getSigner(account);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
+        const account = await signer.getAddress();
         const buyTokenContract = new ethers.Contract(
           buyTokenContractAddress,
           buyTokenABI,
@@ -83,13 +82,12 @@ export default function ReserveTable() {
       }
     };
     fetchData();
-  }, [Moralis, isAuthenticated, isWeb3Enabled, account]);
+  }, [isAuthenticated]);
 
   const handleMultiClaim = async () => {
     if(isAuthenticated) {
-      if(!isWeb3Enabled) await Moralis.enableWeb3();
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
       const buyTokenContract = new ethers.Contract(
         buyTokenContractAddress,
         buyTokenABI,

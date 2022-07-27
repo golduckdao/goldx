@@ -6,14 +6,12 @@ import TabPanel from '../components/TabPanel';
 import MyRewards from '../components/MyRewards';
 import Overview from '../components/Overview';
 import Settings from '../components/Settings';
-import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
 
 import useStore from '../store/store';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 
-import MobileTable from '../components/MobileTable';
 import MyRewardsMobile from '../components/MyRewardsMobile';
 import OverviewMobile from '../components/OverviewMobile';
 import SettingsMobile from '../components/SettingsMobile';

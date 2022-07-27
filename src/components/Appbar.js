@@ -35,7 +35,6 @@ export default function Appbar() {
   } = useStore(state=>state);
   const theme = useTheme();
   const [balance, setBalance] = React.useState(0);
-  const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const [account, setAccount] = React.useState('');
   
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -70,7 +69,7 @@ export default function Appbar() {
           erc20Abi,
           signer
         );
-        const nativeAssetBalance = await nativeAssetContract.balanceOf(await signer.getAddress);
+        const nativeAssetBalance = await nativeAssetContract.balanceOf(await signer.getAddress());
         setBalance(ethers.utils.formatEther(nativeAssetBalance.toString()));
       }
     }
@@ -116,7 +115,6 @@ export default function Appbar() {
               <Typography variant='subtitle' color="text.secondary">
                 Switch to Network
               </Typography>
-              {}
             </ButtonBase>
             <Button variant="contained" sx={{
               ml: 2,

@@ -11,17 +11,19 @@ import { ethers } from 'ethers';
 import useStore from "./store/store";
 
 function App() {
-  const {switchBsc, switchPolygon, switchEth, bsc, polygon, eth, toggleChainDialog} = useStore(state => state);
+  const {switchBsc, switchPolygon, switchEth, switchMetis, bsc, polygon, eth, metis, toggleChainDialog} = useStore(state => state);
   React.useEffect(() => {
     async function initialize() {
       if(window.ethereum)
       {
         window.ethereum.send('eth_requestAccounts');
         const provider = new ethers.providers.Web3Provider(window.ethereum)
-        let chain = await (await provider.getNetwork()).chainId;
+        let chain = `0x${await (await provider.getNetwork()).chainId.toString(16)}`;
+        console.log("Chain ID", chain)
         if( chain === polygon.network) switchPolygon()
         else if( chain === bsc.network) switchBsc()
         else if( chain === eth.network) switchEth()
+        else if( chain === metis.network) switchMetis()
         else toggleChainDialog();
       }
     }
@@ -33,17 +35,18 @@ function App() {
     {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider.provider.on('chainChanged', (chainId) => {
-        // window.location.reload()
-        console.log("chain ID changed to:", chainId)
+        window.location.reload()
+        // console.log("chain ID changed to:", chainId)
         // chainId
         // 0x13881 -> polygon testnet
         // 0x61 -> BSC testnet
         // 0x1 -> ETH Mainnet
-        // 0x4 -> ETH Rinkeby Testnet
-        if( chainId === polygon.network) switchPolygon()
-        else if( chainId === bsc.network) switchBsc()
-        else if( chainId === eth.network) switchEth()
-        else toggleChainDialog();
+        // // 0x4 -> ETH Rinkeby Testnet
+        // if( chainId === polygon.network) switchPolygon()
+        // else if( chainId === bsc.network) switchBsc()
+        // else if( chainId === eth.network) switchEth()
+        // else if( chainId === metis.network) switchMetis()
+        // else toggleChainDialog();
       });
       provider.provider.on('accountsChanged', () => window.reload());
       return () => {

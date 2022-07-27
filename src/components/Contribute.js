@@ -99,7 +99,7 @@ const Contribute = ({setDiscountRate, address}) => {
       <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2}}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <Typography variant="subtitle2">Enter {
-            current=== 'bsc' ? 'BNB' : current === 'polygon' ? 'MATIC' : 'ETH'
+            current=== 'bsc' ? 'BNB' : current === 'polygon' ? 'MATIC' : current === 'metis' ? 'METIS' : 'ETH'
           } Amount</Typography>
           <Typography variant="subtitle2">To Receive</Typography>
         </Box>

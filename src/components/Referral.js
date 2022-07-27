@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 
 import InnerBox from "../components/InnerBox";
 import BlueButton from '../components/BlueButton';
-import { useMoralis } from 'react-moralis';
 
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { ethers } from 'ethers';
@@ -12,19 +11,19 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import useStore from '../store/store';
 
 const Referral = () => {
-  const buyTokenContractAddress = useStore(state => state.buyTokenContractAddress)
+  const {buyTokenContractAddress, isAuthenticated} = useStore(state => state)
   const [isReferral, setIsReferral] = useState(true);
   const [chainTokenEarned, setChainTokenEarned] = useState(0);
   const [nativeTokenEarned, setNativeTokenEarned] = useState(0);
   const [totalReferrals, setTotalReferrals] = useState(0);
-  
-  const {isAuthenticated, isWeb3Enabled, account, Moralis} = useMoralis();
+  const [account, setAccount] = useState('');
 
   useEffect(() => {
     async function fetchData() {
       if(isAuthenticated) {
-        if(!isWeb3Enabled) await Moralis.enableWeb3();
-        const provider = new ethers.providers.Web3Provider(Moralis.provider);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(0);
+        setAccount(await signer.getAddress());
 
         const buyTokenContract = new ethers.Contract(
           buyTokenContractAddress,
@@ -32,7 +31,7 @@ const Referral = () => {
           provider
         );
         setIsReferral(await buyTokenContract.isReferral());
-        const {bnbEarned, tokenEarned, totalReferrals} = await buyTokenContract.referralCommission(account);
+        const {bnbEarned, tokenEarned, totalReferrals} = await buyTokenContract.referralCommission(await signer.getAddress());
         setChainTokenEarned(ethers.utils.formatEther(bnbEarned.toString()));
         setNativeTokenEarned(ethers.utils.formatEther(tokenEarned.toString()));
         setTotalReferrals(totalReferrals.toString());
@@ -68,11 +67,11 @@ const Referral = () => {
       </Typography>
       <Typography align="left" mb={2} noWrap>
         {
-          isReferral ? `https://goldentoken.com/buy/${account}`: 'N/A'
+          isReferral ? `https://goldx.golduck.org/buy/${account}`: 'N/A'
         }
         
       </Typography>
-      <CopyToClipboard text={isReferral ? `https://goldentoken.com/buy/${account}`: 'N/A'}>
+      <CopyToClipboard text={isReferral ? `https://goldx.golduck.org/buy/${account}`: 'N/A'}>
         <BlueButton fullWidth>
           Copy to Clipboard
         </BlueButton>
