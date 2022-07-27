@@ -18,9 +18,8 @@ import services from "../assets/images/services.svg";
 import extensions from "../assets/images/extensions.svg";
 import docs from "../assets/images/docs.svg";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMoralis } from 'react-moralis';
-import { textAlign } from '@mui/system';
 import { useMediaQuery } from '@mui/material';
+import useStore from '../store/store';
 
 const LINKS= [
   {
@@ -55,11 +54,14 @@ const drawerWidth = 200;
 export default function ResponsiveDrawer(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { window, mobileOpen, handleDrawerToggle, login, toggleChainSwitch } = props;
+  const { window, mobileOpen, handleDrawerToggle, login, account, toggleChainSwitch } = props;
   
   const theme = useTheme();
+  const {
+    isAuthenticated, 
+    logout
+  } = useStore(state=>state);
 
-  const {isAuthenticated, logout, user} = useMoralis();
   const view = useMediaQuery(theme.breakpoints.down('sm'));
 
   const drawer =  (
@@ -133,7 +135,7 @@ export default function ResponsiveDrawer(props) {
             onClick={ isAuthenticated ? () => logout() : () => login()}
           >
             {
-              isAuthenticated ? `Disconnect 0x...${user.get("ethAddress").slice(user.get("ethAddress").length-5,user.get("ethAddress").length)}` : 'Connect Wallet'
+              isAuthenticated ? `Disconnect 0x...${account.slice(account.length-5,account.length)}` : 'Connect Wallet'
             }
           </Button>
         </Box>

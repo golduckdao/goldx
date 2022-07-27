@@ -151,6 +151,7 @@ export default function Appbar() {
       handleDrawerToggle={handleDrawerToggle}
       login={loginHandle}
       toggleChainSwitch={toggleChainDialog}
+      account={account}
     />
     </>
   );

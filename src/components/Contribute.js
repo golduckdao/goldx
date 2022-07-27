@@ -13,7 +13,8 @@ import useStore from '../store/store';
 const Contribute = ({setDiscountRate, address}) => {
   const {
     buyTokenContractAddress,
-    isAuthenticated
+    isAuthenticated,
+    current
   } = useStore(state => state);
   const theme = useTheme();
 
@@ -97,7 +98,9 @@ const Contribute = ({setDiscountRate, address}) => {
     <InnerBox paperSx={{p: {xs: 2, lg: 3}}}>
       <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2}}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Typography variant="subtitle2">Enter BNB Amount</Typography>
+          <Typography variant="subtitle2">Enter {
+            current=== 'bsc' ? 'BNB' : current === 'polygon' ? 'MATIC' : 'ETH'
+          } Amount</Typography>
           <Typography variant="subtitle2">To Receive</Typography>
         </Box>
         <Grid

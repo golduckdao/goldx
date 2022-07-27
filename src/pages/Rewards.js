@@ -8,6 +8,9 @@ import Overview from '../components/Overview';
 import Settings from '../components/Settings';
 import { useMoralis } from 'react-moralis';
 import { ethers } from 'ethers';
+
+import useStore from '../store/store';
+
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 
 import MobileTable from '../components/MobileTable';
@@ -18,7 +21,11 @@ import SettingsMobile from '../components/SettingsMobile';
 const Rewards = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const {isAuthenticated, isWeb3Enabled, Moralis, account} = useMoralis();
+  const {
+    rewardPoolContractAddress,
+    isAuthenticated
+  } = useStore(state=>state);
+
   
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -26,13 +33,13 @@ const Rewards = () => {
 
   const handleClaimAll = async () => {
     if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(Moralis.provider);
-      const signer = provider.getSigner(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(0);
 
       // console.log("Signer", await signer.getAddress())
       // console.log("Totality", t)
       const rewardPoolContract = new ethers.Contract(
-        "0x0F7eB0cE0803Ac8aA1799777797B3db90ecACcAF",
+        rewardPoolContractAddress,
         rewardPoolContractAbi,
         signer
       );

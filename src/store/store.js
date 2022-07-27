@@ -13,7 +13,7 @@ const useStore = create((set) => ({
     buyTokenContractAddress: '0xDB018d39569904FB7C86B98171c9d17e0C77E32B'
   },
   polygon: {
-    newtork: '0x13881',
+    network: '0x13881',
     rewardPoolContractAddress: '0x1Bc328347Dfd4346BD8340B5604094885F0CeEAD',
     buyTokenContractAddress: '0xFFD739B7DEC0100aE6e15d19f05Dfbe2235F6E55'
   },
