@@ -11,7 +11,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import useStore from '../store/store';
 
 const Referral = () => {
-  const {buyTokenContractAddress, isAuthenticated} = useStore(state => state)
+  const {buyTokenContractAddress, isAuthenticated, current} = useStore(state => state)
   const [isReferral, setIsReferral] = useState(true);
   const [chainTokenEarned, setChainTokenEarned] = useState(0);
   const [nativeTokenEarned, setNativeTokenEarned] = useState(0);
@@ -59,7 +59,8 @@ const Referral = () => {
         <Typography>
           <b>Amount Earned</b>                    
         </Typography>
-        <Typography>{chainTokenEarned} BNB</Typography>
+        <Typography>{chainTokenEarned} {
+            current=== 'bsc' ? 'BNB' : current === 'polygon' ? 'MATIC' : current === 'metis' ? 'METIS' : 'ETH'}</Typography>
       </Box>
 
       <Typography align='left' mt={5}>
@@ -67,11 +68,11 @@ const Referral = () => {
       </Typography>
       <Typography align="left" mb={2} noWrap>
         {
-          isReferral ? `https://goldx.golduck.org/buy/${account}`: 'N/A'
+          isReferral && isAuthenticated ? `https://goldx.golduck.org/buy/${account}`: 'N/A'
         }
         
       </Typography>
-      <CopyToClipboard text={isReferral ? `https://goldx.golduck.org/buy/${account}`: 'N/A'}>
+      <CopyToClipboard text={isReferral && isAuthenticated ? `https://goldx.golduck.org/buy/${account}`: 'N/A'}>
         <BlueButton fullWidth>
           Copy to Clipboard
         </BlueButton>

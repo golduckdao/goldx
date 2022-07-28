@@ -13,7 +13,7 @@ const HEADERS = [
   'Name',
   'Min Balance Required',
   'Share %',
-  'Claim Wait',
+  'Claim Wait (Days)',
   'Archived',
   'Active'
 ];
@@ -92,7 +92,7 @@ const SettingsMobile = () => {
         }) => ([
           parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
           distributeShare.toString(),
-          parseFloat(claimWait.toString()) / (60 * 24),
+          parseFloat(claimWait.div(60*60*24).toString()),
           parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
           isRemoved ? "Yes" : "No",
           isActive ? "Yes" : "No",
