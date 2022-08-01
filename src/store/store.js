@@ -3,30 +3,30 @@ import create from "zustand";
 
 const useStore = create((set) => ({
   current: 'bsc',
-  rewardPoolContractAddress: '0x885fE14F36226B04dB1a9D06BDE34935EB12b8d2',
-  buyTokenContractAddress: '0xDB018d39569904FB7C86B98171c9d17e0C77E32B',
+  rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
+  buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028',
   isAuthenticated: false,
 
-  allowedNetworks: ['0x61', '0x13881', '0x4','0x24c'],
+  allowedNetworks: ['0x38', '0x89', '0x1','0x440'],
   bsc: {
-    network: '0x61',
-    rewardPoolContractAddress: '0x885fE14F36226B04dB1a9D06BDE34935EB12b8d2',
-    buyTokenContractAddress: '0xDB018d39569904FB7C86B98171c9d17e0C77E32B'
+    network: '0x38',
+    rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
+    buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028'
   },
   polygon: {
-    network: '0x13881',
-    rewardPoolContractAddress: '0x1Bc328347Dfd4346BD8340B5604094885F0CeEAD',
-    buyTokenContractAddress: '0xFFD739B7DEC0100aE6e15d19f05Dfbe2235F6E55'
+    network: '0x89',
+    rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
+    buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028'
   },
   eth: {
-    network: '0x4',
-    rewardPoolContractAddress: '0x8d02C3c8BFefA06E189df25C58115C9774Bea427',
-    buyTokenContractAddress: '0x14EB3d7Ee35E88915772d379713f152ba3b42B6B'
+    network: '0x1',
+    rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
+    buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028'
   },
   metis: {
-    network: '0x24c',
-    rewardPoolContractAddress: '0x85759724f9B849f5c34FdBC8D3001AD4Fa7EffD6',
-    buyTokenContractAddress: '0x426aD21c18475C73B7ab4087090B89Cd8adc8a87'
+    network: '0x440',
+    rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
+    buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028'
   },
   openSwitchChainDialog: false,
 
