@@ -9,6 +9,7 @@ import Rewards from "./pages/Rewards";
 import BuyToken from "./pages/BuyToken";
 import { ethers } from 'ethers';
 import useStore from "./store/store";
+import Extensions from "./pages/Extensions";
 
 function App() {
   const {switchBsc, switchPolygon, switchEth, switchMetis, bsc, polygon, eth, metis, toggleChainDialog} = useStore(state => state);
@@ -75,7 +76,7 @@ function App() {
           <Route index element={<BuyToken />} />
           <Route path=":user" element={<BuyToken />} />
         </Route>
-        
+        <Route path="/extensions" element={<Extensions />}/>
         <Route path="/rewards" element={<Rewards />} />
       </Routes>
       

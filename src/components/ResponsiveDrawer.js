@@ -28,7 +28,7 @@ const LINKS= [
     link: '/buy'
   },
   {
-    name: 'Rewards',
+    name: 'DCA Rewards',
     img: rewards,
     link: '/rewards'
   },
@@ -45,7 +45,7 @@ const LINKS= [
   {
     name: 'Docs',
     img: docs,
-    link: '/docs'
+    link: 'https://docs.golduck.org/'
   }
 ];
 
@@ -70,24 +70,50 @@ export default function ResponsiveDrawer(props) {
       <List>
         {LINKS.map((link, index) => (
           <ListItem key={link.name+"drawer"} disablePadding>
-            <ListItemButton sx={{
-            borderRadius: theme.spacing(2),
-            mx: 1,
-            ":hover":{
-              background: `${theme.palette.primary.light}20`
-            },
-            background: location.pathname === link.link ? `${theme.palette.primary.dark}50` : 'none',
-            display: 'flex',
-            justifyContent: view ? 'center' : 'flex-start',
-            alignItems: 'center'
-            }}
-            onClick={() => {navigate(link.link); handleDrawerToggle();}}
-            >
-              <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
-                <img src={link.img} alt={link.name+" image"}/>
-              </ListItemIcon>
-              <Typography>{link.name}</Typography>
-            </ListItemButton>
+            {
+              link.name !== "Docs" &&
+              <ListItemButton sx={{
+              borderRadius: theme.spacing(2),
+              mx: 1,
+              ":hover":{
+                background: `${theme.palette.primary.light}20`
+              },
+              background: location.pathname === link.link ? `${theme.palette.primary.dark}50` : 'none',
+              display: 'flex',
+              justifyContent: view ? 'center' : 'flex-start',
+              alignItems: 'center'
+              }}
+              onClick={() => {navigate(link.link); handleDrawerToggle();}}
+              >
+                <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
+                  <img src={link.img} alt={link.name+" image"}/>
+                </ListItemIcon>
+                <Typography>{link.name}</Typography>
+              </ListItemButton>
+            }
+            {
+              link.name === "Docs" &&
+              <ListItemButton sx={{
+              borderRadius: theme.spacing(2),
+              mx: 1,
+              ":hover":{
+                background: `${theme.palette.primary.light}20`
+              },
+              background: location.pathname === link.link ? `${theme.palette.primary.dark}50` : 'none',
+              display: 'flex',
+              justifyContent: view ? 'center' : 'flex-start',
+              alignItems: 'center'
+              }}
+              href={link.link}
+              target="_blank"
+              >
+                <ListItemIcon align="center" sx={{ pl: index<2 ? 0: 1}}>
+                  <img src={link.img} alt={link.name+" image"}/>
+                </ListItemIcon>
+                <Typography>{link.name}</Typography>
+              </ListItemButton>
+            }
+            
           </ListItem>
         ))}
       </List>
