@@ -11,6 +11,7 @@ import { ethers } from 'ethers';
 import useStore from "./store/store";
 import Tools from "./pages/Tools";
 import Services from "./pages/Services";
+import { Typography } from "@mui/material";
 
 function App() {
   const {switchBsc, switchPolygon, switchEth, switchMetis, bsc, polygon, eth, metis, toggleChainDialog} = useStore(state => state);
@@ -81,7 +82,9 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/rewards" element={<Rewards />} />
       </Routes>
-      
+      <Typography fontSize={8} color="text.secondary" sx={{ml: {sm: '200px'}, p: 1}}>
+      Disclaimer: GolduckDAO is not a registered broker, analyst or investment. By purchasing GolduckDAO, you agree that you are not purchasing a security or investment and you agree to hold the team harmless and not liable for any losses or taxes you may incur. Although GolduckDAO is an EXPERIMENTAL digital token for social experiment and not a digital currency, always make sure that you are in compliance with your local laws and regulations before you make any purchase.
+      </Typography>
     </div>
   );
 }
