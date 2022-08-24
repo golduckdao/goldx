@@ -36,6 +36,7 @@ const Tools = () => {
       background: {xs: 'none', sm: '#0C0926'},
       borderRadius: '30px 0px 0px 0px',
       height: {sm: '100vh'},
+      position: 'relative'
     }}>
       <Typography sx={{ display: {xs: 'none', sm: 'block'}}} mb={2}><b>Tools</b></Typography>
       <Grid container spacing={5} justifyContent="left" alignItems="center">
@@ -56,6 +57,7 @@ const Tools = () => {
           )
         }
       </Grid>
+
     </Box>
   )
 }

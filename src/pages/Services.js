@@ -27,7 +27,8 @@ const TOOLS = [
 const Services = () => {
   return (
     <Box sx={{
-      p: 4,
+      px: 4,
+      pt: 4,
       ml: {sm: '200px'},
       background: {xs: 'none', sm: '#0C0926'},
       borderRadius: '30px 0px 0px 0px',
