@@ -38,9 +38,9 @@ const LINKS= [
     link: '/services'
   },
   {
-    name: 'Extensions',
+    name: 'Tools',
     img: extensions,
-    link: 'extensions'
+    link: 'tools'
   },
   {
     name: 'Docs',
