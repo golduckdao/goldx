@@ -36,7 +36,7 @@ const BuyLargeViewport = () => {
       <Paper sx={{
         background: '#131A36',
         borderRadius: '16px',
-        height: {sm: '480px', lg: '470px', xl: '600px'},
+        // height: {sm: '480px', lg: '470px', xl: '600px'},
         width: {sm: '440px', lg: '550px', xl:'760px'},
         my: {sm: 10, lg: 6},
       }}>
@@ -82,7 +82,14 @@ const BuyLargeViewport = () => {
           </TabPanel>
           
         </Box>
+        {
+          value === 2 &&
+          <Typography my={1} mx={4} fontSize={12} fontWeight={600}>
+            *Invite your friends and get % BNB contributed, +% of the tokens purchased sent to your wallet instantly
+          </Typography>
+        }
       </Paper>
+
     </Box>
     </>
   )

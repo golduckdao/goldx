@@ -133,7 +133,7 @@ const Contribute = ({setDiscountRate, address}) => {
         Tokens to Receive Instantly: {instantValue}
       </Typography>
       <Typography align="left" variant="subtitle2" noWrap>
-        Your locked tokens: {lockedValue}
+        Bonus tokens: {lockedValue}
       </Typography>
       <Box sx={{ mt: 1}}>
         <Typography variant='caption' align="left" >
