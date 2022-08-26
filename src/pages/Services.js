@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material'
 import React from 'react'
 import ActionCard from '../components/ActionCard';
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/logo-removebg.png";
 
 const TOOLS = [
   {

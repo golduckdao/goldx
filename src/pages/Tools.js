@@ -2,22 +2,22 @@ import { Box, Grid, Typography } from '@mui/material'
 import React from 'react'
 import ActionCard from '../components/ActionCard';
 
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/logo-removebg.png";
 
 const TOOLS = [
   {
     name: "Redeem Tokens",
-    desc: "Burn Tokens for Treasury Assets",
+    desc: "Burn Tokens for Treasury Assets (Coming Soon)",
     img: logo
   },
   {
     name: "Referral Management",
-    desc: "Manage Referral Related Options",
+    desc: "Manage Referral Related Options (Coming Soon)",
     img: logo
   },
   {
     name: "Airdrop",
-    desc: "Participate in Airdrops to win new tokens",
+    desc: "Participate in Airdrops to win new tokens (Coming Soon)",
     img: logo
   },
   {

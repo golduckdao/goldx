@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 
-import logo from "../assets/images/Logo.svg";
+import logo from "../assets/images/logo-removebg.png";
 import { ButtonBase } from '@mui/material';
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
