@@ -3,10 +3,16 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-export default function ActionCard({children, img, alt, noImg, link}) {
+export default function ActionCard({children, img, alt, noImg, link, homelink}) {
+  const navigate = useNavigate();
   const handleClick = (link) => {
-    if(link) window.open(link, "_blank")
+    if(homelink) {
+      if(link) navigate(link)
+    } else {
+      if(link) window.open(link, "_blank")
+    }
   }
   return (
     <Card sx={{
@@ -18,7 +24,7 @@ export default function ActionCard({children, img, alt, noImg, link}) {
     }}>
       <CardActionArea sx={{ height: '100%', pt: 5}}
         component="button"
-        href={() => handleClick(link)}
+        onClick={() => handleClick(link)}
         rel="no-referrer"
         target="_blank"
       >

@@ -18,7 +18,9 @@ const TOOLS = [
   {
     name: "Airdrop",
     desc: "Participate in Airdrops to win new tokens (Coming Soon)",
-    img: logo
+    img: logo,
+    link:"/airdrop",
+    homelink: true
   },
   {
     name: "Vote",
@@ -45,6 +47,7 @@ const Tools = () => {
           <Grid item xs={12} sm={6} md={3} key={"tools"+idx} align="center">
             <ActionCard img={item.img} alt={item.name}     
             link={item.link}
+            homelink={item.homelink}
             >
               <Typography variant="h6">
                 {item.name}
