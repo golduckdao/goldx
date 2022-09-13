@@ -71,10 +71,10 @@ const Airdrop = () => {
         signer
       );
 
-      const value = await airdropContract.getAmountOut(
-        BigNumber.from(valueToReceive).mul(1e9)
-      );
-      await airdropContract.claimTokens(value);
+      // const value = await airdropContract.getAmountOut(
+      //   BigNumber.from(valueToReceive).mul(1e9)
+      // );
+      await airdropContract.claimTokens(valueToReceive);
     }
   };
 
