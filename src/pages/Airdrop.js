@@ -9,6 +9,7 @@ import oldTokenAbi from "../assets/blockchain/old_token_abi.json";
 import InnerBox from "../components/InnerBox";
 import { BigNumber, ethers } from "ethers";
 import BlueButton from "../components/BlueButton";
+import { formatEther } from "ethers/lib/utils";
 const Airdrop = () => {
   const { airdropContractAddress, isAuthenticated } = useStore((state) => state);
   const theme = useTheme();
@@ -151,7 +152,7 @@ const Airdrop = () => {
                   fullWidth
                   variant="outlined"
                   disabled
-                  value={valueToReceive}
+                  value={formatEther(valueToReceive)}
                 />
               </Grid>
             </Grid>
@@ -160,7 +161,7 @@ const Airdrop = () => {
             Golden Duck tokens to Deposit: {valueToDeposit}
           </Typography>
           <Typography ml={1} mt={1} align="left" variant="subtitle2" noWrap>
-            GoldenDAO tokens to receive: {valueToReceive}
+            GoldenDAO tokens to receive: {formatEther(valueToReceive)}
           </Typography>
           <BlueButton fullWidth sx={{ mt: 4 }} onClick={() => handleApprove()}>
             Approve
