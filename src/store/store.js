@@ -5,18 +5,18 @@ const useStore = create((set) => ({
   current: 'bsc',
   rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
   buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028',
-  // airdropContractAddress: '0x7ce5b47beb9716bccffaafc37aa35616afd3b652',
-  airdropContractAddress: '0x365841f21a0C3A577FAf17D136001eD649A6Cc0C', //testnet
+  airdropContractAddress: '0x7ce5b47beb9716bccffaafc37aa35616afd3b652',
+  // airdropContractAddress: '0x365841f21a0C3A577FAf17D136001eD649A6Cc0C', //testnet
   isAuthenticated: false,
 
   allowedNetworks: ['0x38', '0x89', '0x1','0x440'],
   bsc: {
-    // network: '0x38',
-    network: '0x61', //Testnet
+    network: '0x38',
+    // network: '0x61', //Testnet
     rewardPoolContractAddress: '0xf074d0bba56dc68b8b530ce17a185d486dd8caa4',
     buyTokenContractAddress: '0x518f566c7fc5eb8390bed09eefab802d8255c028',
-    // airdropContractAddress: '0x7ce5b47beb9716bccffaafc37aa35616afd3b652'
-    airdropContractAddress: '0x365841f21a0C3A577FAf17D136001eD649A6Cc0C' //testnet
+    airdropContractAddress: '0x7ce5b47beb9716bccffaafc37aa35616afd3b652'
+    // airdropContractAddress: '0x365841f21a0C3A577FAf17D136001eD649A6Cc0C' //testnet
   },
   polygon: {
     network: '0x89',
