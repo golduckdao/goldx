@@ -17,9 +17,9 @@ const TOOLS = [
   },
   {
     name: "Airdrop",
-    desc: "Participate in Airdrops to win new tokens (Coming Soon)",
+    desc: "Participate in Airdrop to win new tokens",
     img: logo,
-    link:"/airdrop",
+    link: "/airdrop",
     homelink: true
   },
   {

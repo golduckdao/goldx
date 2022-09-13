@@ -71,11 +71,8 @@ const Airdrop = () => {
         signer
       );
 
-      // const value = await airdropContract.getAmountOut(
-      //   BigNumber.from(valueToReceive).mul(1e9)
-      // );
-      console.log("Claiming for ", valueToReceive);
-      await airdropContract.claimTokens(valueToReceive);
+      console.log("Claiming for ", BigNumber.from(valueToDeposit).mul(1e9).toString());
+      await airdropContract.claimTokens(BigNumber.from(valueToDeposit).mul(1e9));
     }
   };
 
@@ -170,6 +167,9 @@ const Airdrop = () => {
           <BlueButton fullWidth sx={{ mt: 2 }} disabled={!approved} onClick={() => handleClaim()}>
             Claim Golduck Dao
           </BlueButton>
+          <Typography align="left" variant="caption" noWrap>
+            *Airdrop works only on BSC and ETH chains
+          </Typography>
         </InnerBox>
       </Box>
     </Box>
