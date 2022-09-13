@@ -54,7 +54,7 @@ const Airdrop = () => {
       const value = await airdropContract.getAmountOut(
         BigNumber.from(valueToReceive).mul(1e9)
       );
-      const tx = await oldTokenContract.approve(await signer.getAddress(), value);
+      const tx = await oldTokenContract.approve(airdropContractAddress, value);
       const receipt = await tx.wait();
       if(receipt.status === 1) setApproved(true);
       else setApproved(false);
@@ -161,13 +161,13 @@ const Airdrop = () => {
             Golden Duck tokens to Deposit: {valueToDeposit}
           </Typography>
           <Typography ml={1} mt={1} align="left" variant="subtitle2" noWrap>
-            GoldenDAO tokens to receive: {formatEther(valueToReceive)}
+            GolduckDAO tokens to receive: {formatEther(valueToReceive)}
           </Typography>
           <BlueButton fullWidth sx={{ mt: 4 }} onClick={() => handleApprove()}>
             Approve
           </BlueButton>
           <BlueButton fullWidth sx={{ mt: 2 }} disabled={!approved} onClick={() => handleClaim()}>
-            Claim Golden Duck Dao
+            Claim Golduck Dao
           </BlueButton>
         </InnerBox>
       </Box>
