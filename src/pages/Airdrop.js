@@ -74,6 +74,7 @@ const Airdrop = () => {
       // const value = await airdropContract.getAmountOut(
       //   BigNumber.from(valueToReceive).mul(1e9)
       // );
+      console.log("Claiming for ", valueToReceive);
       await airdropContract.claimTokens(valueToReceive);
     }
   };
@@ -163,7 +164,7 @@ const Airdrop = () => {
           <Typography ml={1} mt={1} align="left" variant="subtitle2" noWrap>
             GolduckDAO tokens to receive: {formatEther(valueToReceive)}
           </Typography>
-          <BlueButton fullWidth sx={{ mt: 4 }} onClick={() => handleApprove()}>
+          <BlueButton fullWidth sx={{ mt: 4 }} disabled={approved} onClick={() => handleApprove()}>
             Approve
           </BlueButton>
           <BlueButton fullWidth sx={{ mt: 2 }} disabled={!approved} onClick={() => handleClaim()}>
