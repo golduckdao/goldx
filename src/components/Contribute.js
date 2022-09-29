@@ -63,7 +63,7 @@ const Contribute = ({setDiscountRate, address}) => {
         console.log("Referred")
         await buyTokenContract.buy(address, {value: ethers.utils.parseEther(value.toString())});
       } else {
-        console.log("Unreferred", ethers.utils.parseEther(value.toString()).toString(), ethers.constants.AddressZero)
+        console.log("Unreferred/False", ethers.utils.parseEther(value.toString()).toString(), ethers.constants.AddressZero)
         await buyTokenContract.buy(ethers.constants.AddressZero, {value: ethers.utils.parseEther(value.toString())});
       }
       
@@ -137,7 +137,7 @@ const Contribute = ({setDiscountRate, address}) => {
       </Typography>
       <Box sx={{ mt: 1}}>
         <Typography variant='caption' align="left" >
-          *Any Locked Tokens can be found under Reserved Tab
+          *Any Bonus Tokens can be found under Reserved Tab
         </Typography>
       </Box>
       <BlueButton fullWidth sx={{mt: 2}} onClick={handleBuy}>Buy Now</BlueButton>
