@@ -19,6 +19,7 @@ const Referral = () => {
   const [nativeTokenEarned, setNativeTokenEarned] = useState(0);
   const [totalReferrals, setTotalReferrals] = useState(0);
   const [account, setAccount] = useState("");
+  const [referralShare, setReferralShare] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -32,6 +33,8 @@ const Referral = () => {
           buyTokenABI,
           provider
         );
+        const refShare = await buyTokenContract.referralShare();
+        setReferralShare(refShare.toString());
         setIsReferral(await buyTokenContract.isReferral());
         const { bnbEarned, tokenEarned, totalReferrals } =
           await buyTokenContract.referralCommission(await signer.getAddress());
@@ -110,6 +113,17 @@ const Referral = () => {
       >
         <BlueButton fullWidth>Copy to Clipboard</BlueButton>
       </CopyToClipboard>
+      <Typography my={1} mx={1} fontSize={12} fontWeight={600}>
+      {`*Invite your friends and get ${referralShare}% ${
+        current === "bsc"
+          ? "BNB"
+          : current === "polygon"
+          ? "MATIC"
+          : current === "metis"
+          ? "METIS"
+          : "ETH"
+      } contributed, ${referralShare}% of the tokens purchased sent to your wallet instantly`}
+    </Typography>
     </InnerBox>
   );
 };

@@ -15,26 +15,10 @@ import useStore from "../store/store";
 
 const BuyLargeViewport = () => {
   const theme = useTheme();
-  const { current, buyTokenContractAddress } = useStore();
   const { user } = useParams();
   const [value, setValue] = useState(0);
   const [, setDiscountRate] = useState(0);
-  const [referralShare, setReferralShare] = useState(0);
 
-  React.useEffect(() => {
-    async function fetchData() {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-      const buyTokenContract = new ethers.Contract(
-        buyTokenContractAddress,
-        buyTokenABI,
-        provider
-      );
-      const refShare = await buyTokenContract.referralShare();
-      setReferralShare(refShare.toString());
-    }
-    fetchData();
-  }, []);
   return (
     <>
       <Typography py={2} align="center">
@@ -142,19 +126,6 @@ const BuyLargeViewport = () => {
               <Referral />
             </TabPanel>
           </Box>
-          {value === 2 && (
-            <Typography my={1} mx={4} fontSize={12} fontWeight={600}>
-              {`*Invite your friends and get % ${
-                current === "bsc"
-                  ? "BNB"
-                  : current === "polygon"
-                  ? "MATIC"
-                  : current === "metis"
-                  ? "METIS"
-                  : "ETH"
-              } contributed, ${referralShare}% of the tokens purchased sent to your wallet instantly`}
-            </Typography>
-          )}
         </Paper>
       </Box>
     </>
