@@ -22,7 +22,7 @@ const SettingsMobile = () => {
   const {rewardPoolContractAddress, isAuthenticated} = useStore(state=>state);
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const [lastBuyBackTimestamp, _] = React.useState(BigNumber.from(0));
+  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
   const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
 
 
@@ -50,9 +50,9 @@ const SettingsMobile = () => {
           signer
         );
 
-        // const l = await rewardPoolContract.lastBuyBackTimestamp();
+        const l = await rewardPoolContract.lastBuyBackTimestamp();
         const b = await rewardPoolContract.buyBackWait();
-        // setLastBuyBackTimestamp(l);
+        setLastBuyBackTimestamp(l);
         setBuyBackWait(b);
 
         let promiseArr = [];
@@ -83,7 +83,11 @@ const SettingsMobile = () => {
           promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
         }
 
-        let rewardInfoRows = (await Promise.all(promiseArr)).map(({
+        let rewardInfoRows = (await Promise.all(promiseArr));
+
+        console.log("Rewards Info Fetched", rewardInfoRows);
+
+        rewardInfoRows = rewardInfoRows.map(({
           minimumTokenBalanceForRewards,
           distributeShare,
           claimWait,
@@ -93,11 +97,12 @@ const SettingsMobile = () => {
           parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
           distributeShare.toString(),
           parseFloat(claimWait.div(60*60*24).toString()),
-          parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
+          // parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
           isRemoved ? "Yes" : "No",
           isActive ? "Yes" : "No",
 
         ]));
+        console.log("Rewards Info Processed", rewardInfoRows);
 
 
         for (let i = 0; i < tokenNames.length; i++) {
