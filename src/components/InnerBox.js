@@ -9,9 +9,9 @@ const InnerBox = ({children, boxSx, paperSx}) => {
       display: 'flex',
       borderRadius: theme.spacing(2),
       height: {
-        xs: paperSx && paperSx.height ? paperSx.height.xs + 6 : '366px',
-        sm: paperSx && paperSx.height ? paperSx.height.lg + 6 : '376px',
-        xl: paperSx && paperSx.height ? paperSx.height.xl + 6 : '456px'
+        xs: paperSx && paperSx.height ? paperSx.height.xs + 6 : '386px',
+        sm: paperSx && paperSx.height ? paperSx.height.lg + 6 : '396px',
+        xl: paperSx && paperSx.height ? paperSx.height.xl + 6 : '462px'
       },
       width: {
         xs: paperSx && paperSx.width ? paperSx.width.xs + 6 : '356px',
@@ -27,7 +27,7 @@ const InnerBox = ({children, boxSx, paperSx}) => {
       <Paper sx={{
         background: '#1A2662',
         borderRadius: theme.spacing(2),
-        height: {xs: '360px', sm: '370px', xl: '450px'},
+        height: {xs: '385px', sm: '395px', xl: '460px'},
         width: {xs: '350px', sm: '350px', lg: '380px', xl: '520px'},
         ...paperSx
       }}
