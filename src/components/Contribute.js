@@ -61,10 +61,10 @@ const Contribute = ({setDiscountRate, address}) => {
       console.log("Starting")
       if(isReferral && address) {
         console.log("Referred", value, address)
-        await buyTokenContract.buy(address, {value: value});
+        await buyTokenContract.buy(address, {value: ethers.utils.parseEther(value.toString())});
       } else {
-        console.log("Unreferred/False", value.toString(), ethers.constants.AddressZero)
-        await buyTokenContract.buy(ethers.constants.AddressZero, {value: value});
+        console.log("Unreferred/False", ethers.utils.parseEther(value.toString()).toString())
+        await buyTokenContract.buy(ethers.constants.AddressZero, {value: ethers.utils.parseEther(value.toString())});
       }
       
     }
