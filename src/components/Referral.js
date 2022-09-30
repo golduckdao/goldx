@@ -122,7 +122,7 @@ const Referral = () => {
           : current === "metis"
           ? "METIS"
           : "ETH"
-      } contributed, ${referralShare}% of the tokens purchased sent to your wallet instantly`}
+      } contributed, +${referralShare}% of the tokens purchased sent to your wallet instantly`}
     </Typography>
     </InnerBox>
   );
