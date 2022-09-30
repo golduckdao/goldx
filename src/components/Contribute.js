@@ -5,7 +5,7 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
 import InnerBox from "./InnerBox";
 import BlueButton from './BlueButton';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
 import { debounce } from 'lodash';
 import useStore from '../store/store';
@@ -25,7 +25,7 @@ const Contribute = ({setDiscountRate, address}) => {
   const [currentSale, setCurrentSale] = useState(0);
   const [instantValue, setInstantValue] = useState(0);
   const [lockedValue, setLockedValue] = useState(0);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(BigNumber.from(0));
 
   const handleInput = debounce(async (e) => {
     let t = parseFloat(e.target.value) || 0, amount, discount;
@@ -45,7 +45,7 @@ const Contribute = ({setDiscountRate, address}) => {
       setIsReferral(await buyTokenContract.isReferral());
       setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
       setLockedValue(parseFloat(ethers.utils.formatEther(discount.toString())));
-      setValue(t);
+      setValue(BigNumber.from(t));
     }
   }, 2000);
 
@@ -60,11 +60,11 @@ const Contribute = ({setDiscountRate, address}) => {
       );
       console.log("Starting")
       if(isReferral && address) {
-        console.log("Referred")
-        await buyTokenContract.buy(address, {value: value.toString()});
+        console.log("Referred", value, address)
+        await buyTokenContract.buy(address, {value: value});
       } else {
         console.log("Unreferred/False", value.toString(), ethers.constants.AddressZero)
-        await buyTokenContract.buy(ethers.constants.AddressZero, {value: value.toString()});
+        await buyTokenContract.buy(ethers.constants.AddressZero, {value: value});
       }
       
     }
