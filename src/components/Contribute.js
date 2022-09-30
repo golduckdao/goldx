@@ -25,7 +25,7 @@ const Contribute = ({setDiscountRate, address}) => {
   const [currentSale, setCurrentSale] = useState(0);
   const [instantValue, setInstantValue] = useState(0);
   const [lockedValue, setLockedValue] = useState(0);
-  const [value, setValue] = useState(BigNumber.from(0));
+  const [value, setValue] = useState(0);
 
   const handleInput = debounce(async (e) => {
     let t = parseFloat(e.target.value) || 0, amount, discount;
@@ -45,7 +45,7 @@ const Contribute = ({setDiscountRate, address}) => {
       setIsReferral(await buyTokenContract.isReferral());
       setInstantValue(parseFloat(ethers.utils.formatEther(amount.toString())));
       setLockedValue(parseFloat(ethers.utils.formatEther(discount.toString())));
-      setValue(BigNumber.from(t));
+      setValue(t);
     }
   }, 2000);
 
