@@ -140,7 +140,7 @@ const Contribute = ({setDiscountRate, address}) => {
           *Any Bonus Tokens can be found under Reserved Tab
         </Typography>
       </Box>
-      <BlueButton fullWidth sx={{mt: 2}} onClick={handleBuy}>Buy Now</BlueButton>
+      <BlueButton fullWidth sx={{mt: 2}} onClick={handleBuy} disabled={value < minDeposit || value > maxDeposit}>Buy Now</BlueButton>
 
     </InnerBox>
   )
