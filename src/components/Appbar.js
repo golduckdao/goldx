@@ -87,7 +87,7 @@ export default function Appbar() {
       const provider = new ethers.providers.Web3Provider(instance);
       const signer = provider.getSigner();
       await signer.signMessage("Welcome to the GoldX Portal");
-      login();
+      login(provider);
       setAccount(await signer.getAddress());
     }
   };

@@ -32,6 +32,7 @@ function App() {
   React.useEffect(() => {
     async function initialize() {
       if (isAuthenticated) {
+        console.log("Provider", provider)
         let chain = `0x${await (
           await provider.getNetwork()
         ).chainId.toString(16)}`;
@@ -44,38 +45,29 @@ function App() {
       }
     }
     initialize();
-  }, []);
+  }, [isAuthenticated]);
 
   React.useEffect(() => {
     async function initialize() {
-      const web3instance = new Web3Modal({
-        cacheProvider: false,
-        providerOptions,
-      });
-      const web3modalInstance = await web3instance.connect();
-      const provider = new ethers.providers.Web3Provider(web3modalInstance);
-      provider.provider.on("chainChanged", (chainId) => {
-        window.location.reload();
-        // console.log("chain ID changed to:", chainId)
-        // chainId
-        // 0x13881 -> polygon testnet
-        // 0x61 -> BSC testnet
-        // 0x1 -> ETH Mainnet
-        // // 0x4 -> ETH Rinkeby Testnet
-        // if( chainId === polygon.network) switchPolygon()
-        // else if( chainId === bsc.network) switchBsc()
-        // else if( chainId === eth.network) switchEth()
-        // else if( chainId === metis.network) switchMetis()
-        // else toggleChainDialog();
-      });
-      provider.provider.on("accountsChanged", () => window.reload());
-      // return () => {
-      //   provider.provider.removeAllListeners("chainChanged");
-      //   provider.provider.removeAllListeners("accountsChanged");
-      // };
+      if (isAuthenticated) {
+        try {
+          provider.provider.on("chainChanged", (chainId) => {
+            window.location.reload();
+          });
+          provider.provider.on("accountsChanged", () =>
+            window.location.reload()
+          );
+          return () => {
+            provider.provider.removeAllListeners("chainChanged");
+            provider.provider.removeAllListeners("accountsChanged");
+          };
+        } catch (error) {
+          console.log("Error occured while initializing", error);
+        }
+      }
     }
     initialize();
-  }, []);
+  }, [isAuthenticated]);
   return (
     <div
       className="App"

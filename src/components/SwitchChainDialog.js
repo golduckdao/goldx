@@ -18,9 +18,16 @@ import _metis from "../assets/images/metis_logo.png";
 import useStore from "../store/store";
 
 const SwitchChainDialog = ({ open, onClose }) => {
-  const { bsc, polygon, eth, metis, allowedNetworks, current } = useStore(
-    (state) => state
-  );
+  const {
+    bsc,
+    polygon,
+    eth,
+    metis,
+    allowedNetworks,
+    current,
+    isAuthenticated,
+    provider,
+  } = useStore();
   const [chainImg, setChainImg] = React.useState({
     name: "Ethereum Mainnet",
     img: _eth,
@@ -28,12 +35,9 @@ const SwitchChainDialog = ({ open, onClose }) => {
 
   React.useEffect(() => {
     async function fetchChain() {
-      console.log("Current Chain", current);
       if (
-        window.ethereum &&
-        allowedNetworks.includes(
-          await window.ethereum.request({ method: "eth_chainId" })
-        )
+        isAuthenticated &&
+        allowedNetworks.includes(await provider.getNetwork())
       ) {
         if (current === "bsc")
           setChainImg({ name: "Binance Smart Chain", img: _binance });
@@ -41,30 +45,33 @@ const SwitchChainDialog = ({ open, onClose }) => {
           setChainImg({ name: "Polygon", img: _polygon });
         else if (current === "metis")
           setChainImg({ name: "Metis Andromeda", img: _metis });
+        else setChainImg({ name: "Ethereum Mainnet", img: _eth });
       }
     }
     fetchChain();
-  }, [current]);
+  }, [current, isAuthenticated]);
 
-  const handleChainSwitch = async (id) => {
+  const handleChainSwitch = async ({network, rpcUrl, chainName}) => {
     // implement logic for switching chains
-    if (window.ethereum) {
+    if (isAuthenticated) {
       try {
         // check if the chain to connect to is installed
-        await window.ethereum.request({
+        await provider.provider.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: id }], // chainId must be in hexadecimal numbers
+          params: [{ chainId: network }], // chainId must be in hexadecimal numbers
         });
       } catch (error) {
         // This error code indicates that the chain has not been added to MetaMask
         // if it is not, then install it into the user MetaMask
         if (error.code === 4902) {
           try {
-            await window.ethereum.request({
+            await provider.provider.request({
               method: "wallet_addEthereumChain",
               params: [
                 {
-                  chainId: id,
+                  chainId: network,
+                  rpcUrls: [rpcUrl],
+                  chainName
                 },
               ],
             });
@@ -76,7 +83,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
       }
     } else {
       alert(
-        "MetaMask is not installed. Please consider installing it: https://metamask.io/download.html"
+        "Please Sign in to access this functionality!"
       );
     }
     onClose();
@@ -116,7 +123,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
           fullWidth
           sx={{ my: 1 }}
           startIcon={<img src={_eth} height={20} alt="Ethereum Logo" />}
-          onClick={() => handleChainSwitch(eth.network)}
+          onClick={() => handleChainSwitch(eth)}
         >
           Ethereum Mainnet
         </Button>
@@ -125,7 +132,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
           fullWidth
           sx={{ my: 1 }}
           startIcon={<img src={_binance} height={20} alt="BSC Logo" />}
-          onClick={() => handleChainSwitch(bsc.network)}
+          onClick={() => handleChainSwitch(bsc)}
         >
           Binance Smart Chain (BSC)
         </Button>
@@ -134,7 +141,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
           fullWidth
           sx={{ my: 1 }}
           startIcon={<img src={_polygon} height={20} alt="Polygon Logo" />}
-          onClick={() => handleChainSwitch(polygon.network)}
+          onClick={() => handleChainSwitch(polygon)}
         >
           Polygon
         </Button>
@@ -143,7 +150,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
           fullWidth
           sx={{ my: 1 }}
           startIcon={<img src={_metis} height={20} alt="Polygon Logo" />}
-          onClick={() => handleChainSwitch(metis.network)}
+          onClick={() => handleChainSwitch(metis)}
         >
           Metis Andromeda
         </Button>

@@ -13,6 +13,8 @@ const useStore = create((set) => ({
   bsc: {
     network: "0x38",
     // network: '0x61', //Testnet
+    rpcUrl: 'https://bsc-dataseed1.binance.org/',
+    chainName: "Binance Smart Chain",
     rewardPoolContractAddress: "0xf074d0bba56dc68b8b530ce17a185d486dd8caa4",
     buyTokenContractAddress: "0x518f566c7fc5eb8390bed09eefab802d8255c028",
     airdropContractAddress: "0x7ce5b47beb9716bccffaafc37aa35616afd3b652",
@@ -20,17 +22,23 @@ const useStore = create((set) => ({
   },
   polygon: {
     network: "0x89",
+    rpcUrl: 'https://polygon-rpc.com/',
+    chainName: "Polygon",
     rewardPoolContractAddress: "0xf074d0bba56dc68b8b530ce17a185d486dd8caa4",
     buyTokenContractAddress: "0x518f566c7fc5eb8390bed09eefab802d8255c028",
   },
   eth: {
     network: "0x1",
+    chainName: "Ethereum Mainnet",
+    rpcUrl: `https://mainnet.infura.io/v3/${process.env.REACT_APP_ETH_MAINNET_API}`,
     rewardPoolContractAddress: "0xf074d0bba56dc68b8b530ce17a185d486dd8caa4",
     buyTokenContractAddress: "0x518f566c7fc5eb8390bed09eefab802d8255c028",
     airdropContractAddress: "0x6a404e6f2e376c35d6035f0cccba9fdb7aef7bae",
   },
   metis: {
     network: "0x440",
+    chainName: "Metis Andromeda",
+    rpcUrl: 'https://andromeda.metis.io/?owner=1088',
     rewardPoolContractAddress: "0xf074d0bba56dc68b8b530ce17a185d486dd8caa4",
     buyTokenContractAddress: "0x518f566c7fc5eb8390bed09eefab802d8255c028",
   },
