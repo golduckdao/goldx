@@ -1,21 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Typography, Box, Paper, Grid, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 import InnerBox from "./InnerBox";
-import BlueButton from './BlueButton';
-import { BigNumber, ethers } from 'ethers';
+import BlueButton from "./BlueButton";
+import { ethers } from "ethers";
 import buyTokenABI from "../assets/blockchain/buy_token_abi.json";
-import { debounce } from 'lodash';
-import useStore from '../store/store';
+import { debounce } from "lodash";
+import useStore from "../store/store";
 
-const Contribute = ({setDiscountRate, address}) => {
-  const {
-    buyTokenContractAddress,
-    isAuthenticated,
-    current
-  } = useStore(state => state);
+const Contribute = ({ setDiscountRate, address }) => {
+  const { buyTokenContractAddress, isAuthenticated, current, provider } = useStore();
   const theme = useTheme();
 
   const [isReferral, setIsReferral] = useState(true);
@@ -28,18 +24,23 @@ const Contribute = ({setDiscountRate, address}) => {
   const [value, setValue] = useState(0);
 
   const handleInput = debounce(async (e) => {
-    let t = parseFloat(e.target.value) || 0, amount, discount;
-    if(window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    let t = parseFloat(e.target.value) || 0,
+      amount,
+      discount;
+    if (isAuthenticated) {
       const buyTokenContract = new ethers.Contract(
         buyTokenContractAddress,
         buyTokenABI,
         provider
       );
-      if(currentSale) {
-        [amount, discount] = (await buyTokenContract.getAmountOutForMarketPrice(ethers.utils.parseEther(t.toString())));
+      if (currentSale) {
+        [amount, discount] = await buyTokenContract.getAmountOutForMarketPrice(
+          ethers.utils.parseEther(t.toString())
+        );
       } else {
-        [amount, discount] = (await buyTokenContract.getAmountOutForBasePrice(ethers.utils.parseEther(t.toString())));
+        [amount, discount] = await buyTokenContract.getAmountOutForBasePrice(
+          ethers.utils.parseEther(t.toString())
+        );
       }
 
       setIsReferral(await buyTokenContract.isReferral());
@@ -50,39 +51,51 @@ const Contribute = ({setDiscountRate, address}) => {
   }, 2000);
 
   const handleBuy = async () => {
-    if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (isAuthenticated) {
       const signer = provider.getSigner(0);
       const buyTokenContract = new ethers.Contract(
         buyTokenContractAddress,
         buyTokenABI,
         signer
       );
-      console.log("Starting")
-      if(isReferral && address) {
-        console.log("Referred", value, address)
-        await buyTokenContract.buy(address, {value: ethers.utils.parseEther(value.toString())});
+      console.log("Starting");
+      if (isReferral && address) {
+        console.log("Referred", value, address);
+        await buyTokenContract.buy(address, {
+          value: ethers.utils.parseEther(value.toString()),
+        });
       } else {
-        console.log("Unreferred/False", ethers.utils.parseEther(value.toString()).toString())
-        await buyTokenContract.buy(ethers.constants.AddressZero, {value: ethers.utils.parseEther(value.toString())});
+        console.log(
+          "Unreferred/False",
+          ethers.utils.parseEther(value.toString()).toString()
+        );
+        await buyTokenContract.buy(ethers.constants.AddressZero, {
+          value: ethers.utils.parseEther(value.toString()),
+        });
       }
-      
     }
-  }
+  };
 
   React.useEffect(() => {
-    async function fetchData(){
-      if(isAuthenticated && window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+    async function fetchData() {
+      if (isAuthenticated) {
         const buyTokenContract = new ethers.Contract(
           buyTokenContractAddress,
           buyTokenABI,
           provider
         );
-        const mind = ethers.utils.formatEther((await buyTokenContract.minimumDeposit()).toString());
-        const maxd = ethers.utils.formatEther((await buyTokenContract.maximumDeposit()).toString());
-        const currD = parseFloat((await buyTokenContract.currentDiscount()).toString());
-        const currentSale = parseInt((await buyTokenContract.currentSale()).toString());
+        const mind = ethers.utils.formatEther(
+          (await buyTokenContract.minimumDeposit()).toString()
+        );
+        const maxd = ethers.utils.formatEther(
+          (await buyTokenContract.maximumDeposit()).toString()
+        );
+        const currD = parseFloat(
+          (await buyTokenContract.currentDiscount()).toString()
+        );
+        const currentSale = parseInt(
+          (await buyTokenContract.currentSale()).toString()
+        );
 
         // console.log("Data", mind, maxd, currD);
         setMinDeposit(mind);
@@ -91,16 +104,30 @@ const Contribute = ({setDiscountRate, address}) => {
         setCurrentSale(currentSale);
         setDiscountRate(currD);
       }
-    };
-    fetchData()
-  }, [isAuthenticated, buyTokenContractAddress])
+    }
+    fetchData();
+  }, [isAuthenticated, buyTokenContractAddress]);
   return (
-    <InnerBox paperSx={{p: {xs: 2, lg: 3}}}>
-      <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2}}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Typography variant="subtitle2">Enter {
-            current=== 'bsc' ? 'BNB' : current === 'polygon' ? 'MATIC' : current === 'metis' ? 'METIS' : 'ETH'
-          } Amount</Typography>
+    <InnerBox paperSx={{ p: { xs: 2, lg: 3 } }}>
+      <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="subtitle2">
+            Enter{" "}
+            {current === "bsc"
+              ? "BNB"
+              : current === "polygon"
+              ? "MATIC"
+              : current === "metis"
+              ? "METIS"
+              : "ETH"}{" "}
+            Amount
+          </Typography>
           <Typography variant="subtitle2">To Receive</Typography>
         </Box>
         <Grid
@@ -110,13 +137,23 @@ const Contribute = ({setDiscountRate, address}) => {
           alignItems="center"
         >
           <Grid item xs={5} align="center">
-          <TextField fullWidth variant='outlined' onChange={handleInput} placeholder={"0.000"}/>
+            <TextField
+              fullWidth
+              variant="outlined"
+              onChange={handleInput}
+              placeholder={"0.000"}
+            />
           </Grid>
           <Grid item xs={2} align="center">
-            <ArrowRightAltIcon/>
+            <ArrowRightAltIcon />
           </Grid>
           <Grid item xs={5} align="center">
-            <TextField fullWidth variant='outlined' disabled value={instantValue + lockedValue}/>
+            <TextField
+              fullWidth
+              variant="outlined"
+              disabled
+              value={instantValue + lockedValue}
+            />
           </Grid>
         </Grid>
       </Paper>
@@ -127,7 +164,7 @@ const Contribute = ({setDiscountRate, address}) => {
         Max Deposit: {maxDeposit}
       </Typography>
       <Typography align="left" variant="subtitle2">
-        Discount: {discount === 0 ? 'N/A' : `${discount} %`}
+        Discount: {discount === 0 ? "N/A" : `${discount} %`}
       </Typography>
       <Typography align="left" variant="subtitle2" noWrap>
         Tokens to Receive Instantly: {instantValue}
@@ -135,15 +172,21 @@ const Contribute = ({setDiscountRate, address}) => {
       <Typography align="left" variant="subtitle2" noWrap>
         Bonus tokens: {lockedValue}
       </Typography>
-      <Box sx={{ mt: 1}}>
-        <Typography variant='caption' align="left" >
+      <Box sx={{ mt: 1 }}>
+        <Typography variant="caption" align="left">
           *Any Bonus Tokens can be found under Reserved Tab
         </Typography>
       </Box>
-      <BlueButton fullWidth sx={{mt: 2}} onClick={handleBuy} disabled={value < minDeposit || value > maxDeposit}>Buy Now</BlueButton>
-
+      <BlueButton
+        fullWidth
+        sx={{ mt: 2 }}
+        onClick={handleBuy}
+        disabled={value < minDeposit || value > maxDeposit}
+      >
+        Buy Now
+      </BlueButton>
     </InnerBox>
-  )
-}
+  );
+};
 
-export default Contribute
+export default Contribute;

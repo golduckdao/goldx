@@ -1,34 +1,32 @@
-import React from 'react'
+import React from "react";
 
 import Box from "@mui/material/Box";
 
 import rewardPoolContractAbi from "../assets/blockchain/reward_pool_abi.json";
 import erc20Abi from "../assets/blockchain/erc20_abi.json";
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers } from "ethers";
 
-
-import CustomTable from './CustomTable'
-import BlueButton from '../components/BlueButton';
-import useStore from '../store/store';
+import CustomTable from "./CustomTable";
+import BlueButton from "../components/BlueButton";
+import useStore from "../store/store";
 
 const HEADERS = [
-  'Name',
-  'Min Balance Required',
-  'Share %',
-  'Claim Wait (Days)',
-  'Archived',
-  'Active'
-]
+  "Name",
+  "Min Balance Required",
+  "Share %",
+  "Claim Wait (Days)",
+  "Archived",
+  "Active",
+];
 
 const Settings = () => {
-  const {rewardPoolContractAddress, isAuthenticated} = useStore(state => state);
+  const { rewardPoolContractAddress, isAuthenticated, provider } = useStore();
   const [isLoading, setIsLoading] = React.useState(true);
   const [tablerows, setTablerows] = React.useState([]);
-  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(BigNumber.from(0));
-  const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0))
-
-
-
+  const [lastBuyBackTimestamp, setLastBuyBackTimestamp] = React.useState(
+    BigNumber.from(0)
+  );
+  const [buyBackWait, setBuyBackWait] = React.useState(BigNumber.from(0));
 
   // console.log("Signer", await signer.getAddress())
 
@@ -41,7 +39,6 @@ const Settings = () => {
       // console.log("account?", account);
       if (isAuthenticated) {
         // console.log("is loading?", isLoading)
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner(0);
 
         // console.log("Signer", await signer.getAddress())
@@ -60,19 +57,21 @@ const Settings = () => {
         let promiseArr = [];
 
         for (let i = 0; i < 10; i++) {
-          promiseArr.push(rewardPoolContract.rewardAssetAt(i))
+          promiseArr.push(rewardPoolContract.rewardAssetAt(i));
         }
         const tokenAddresses = await Promise.all(promiseArr);
 
         promiseArr = [];
         for (let i = 0; i < 10; i++) {
-          if (tokenAddresses[i] !== "0x0000000000000000000000000000000000000000") {
+          if (
+            tokenAddresses[i] !== "0x0000000000000000000000000000000000000000"
+          ) {
             const erc20Contract = new ethers.Contract(
               tokenAddresses[i],
               erc20Abi,
               signer
             );
-            promiseArr.push(erc20Contract.name())
+            promiseArr.push(erc20Contract.name());
           }
         }
         const tokenNames = await Promise.all(promiseArr);
@@ -82,30 +81,32 @@ const Settings = () => {
         promiseArr = [];
 
         for (let i = 0; i < totalTokens; i++) {
-          promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]))
+          promiseArr.push(rewardPoolContract.rewardInfo(tokenAddresses[i]));
         }
 
-        let rewardInfoRows = (await Promise.all(promiseArr));
+        let rewardInfoRows = await Promise.all(promiseArr);
 
         console.log("Rewards Info Fetched", rewardInfoRows);
 
-        rewardInfoRows = rewardInfoRows.map(({
-          minimumTokenBalanceForRewards,
-          distributeShare,
-          claimWait,
-          isActive,
-          isRemoved
-        }) => ([
-          parseFloat(ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())).toFixed(2),
-          distributeShare.toString(),
-          parseFloat(claimWait.div(60*60*24).toString()),
-          // parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
-          isRemoved ? "Yes" : "No",
-          isActive ? "Yes" : "No",
-
-        ]));
+        rewardInfoRows = rewardInfoRows.map(
+          ({
+            minimumTokenBalanceForRewards,
+            distributeShare,
+            claimWait,
+            isActive,
+            isRemoved,
+          }) => [
+            parseFloat(
+              ethers.utils.formatEther(minimumTokenBalanceForRewards.toString())
+            ).toFixed(2),
+            distributeShare.toString(),
+            parseFloat(claimWait.div(60 * 60 * 24).toString()),
+            // parseFloat(buyBackWait.div(BigNumber.from(60 * 60 * 24)).toString()).toFixed(2),
+            isRemoved ? "Yes" : "No",
+            isActive ? "Yes" : "No",
+          ]
+        );
         console.log("Rewards Info Processed", rewardInfoRows);
-
 
         for (let i = 0; i < tokenNames.length; i++) {
           // if(rewardInfoRows[i][3]) {
@@ -113,29 +114,20 @@ const Settings = () => {
           // } else {
           //   rewardInfoRows[i][3] = false;
           // }
-          rows.push([
-            tokenNames[i],
-            ...rewardInfoRows[i]
-          ])
+          rows.push([tokenNames[i], ...rewardInfoRows[i]]);
         }
         // console.log("Rows", rows);
 
-        setTablerows(rows)
-        setIsLoading(false)
-
+        setTablerows(rows);
+        setIsLoading(false);
       }
-
-
-
     }
 
-    fetchData()
-
+    fetchData();
   }, [isAuthenticated]);
 
   const handleGenerateRewards = async () => {
-    if(isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (isAuthenticated) {
       const signer = provider.getSigner(0);
       const rewardPoolContract = new ethers.Contract(
         rewardPoolContractAddress,
@@ -144,16 +136,30 @@ const Settings = () => {
       );
       await rewardPoolContract.generateBuyBackForOpen();
     }
-  }
+  };
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <BlueButton disabled={parseFloat(lastBuyBackTimestamp.add(buyBackWait).mul(1000).toString()) > Date.now()} onClick={handleGenerateRewards}>Generate Rewards</BlueButton>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <BlueButton
+          disabled={
+            parseFloat(
+              lastBuyBackTimestamp.add(buyBackWait).mul(1000).toString()
+            ) > Date.now()
+          }
+          onClick={handleGenerateRewards}
+        >
+          Generate Rewards
+        </BlueButton>
       </Box>
-      <CustomTable headers={HEADERS} isLoading={isLoading} tablerows={tablerows} ikey="settings"/>
+      <CustomTable
+        headers={HEADERS}
+        isLoading={isLoading}
+        tablerows={tablerows}
+        ikey="settings"
+      />
     </>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;

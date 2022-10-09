@@ -11,7 +11,7 @@ import { BigNumber, ethers } from "ethers";
 import BlueButton from "../components/BlueButton";
 import { formatEther } from "ethers/lib/utils";
 const Airdrop = () => {
-  const { airdropContractAddress, isAuthenticated } = useStore((state) => state);
+  const { airdropContractAddress, isAuthenticated, provider } = useStore();
   const theme = useTheme();
   const [valueToReceive, setValueToReceive] = React.useState(0);
   const [valueToDeposit, setValueToDeposit] = React.useState(0);
@@ -20,8 +20,7 @@ const Airdrop = () => {
     if (airdropContractAddress) {
       let t = parseFloat(e.target.value) || 0;
       setValueToDeposit(t);
-      if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+      if (isAuthenticated) {
         const airdropContract = new ethers.Contract(
           airdropContractAddress,
           airdropAbi,
@@ -36,8 +35,7 @@ const Airdrop = () => {
   }, 2000);
 
   const handleApprove = async () => {
-    if (window.ethereum && valueToReceive > 0 && isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (valueToReceive > 0 && isAuthenticated) {
       const signer = await provider.getSigner();
       const airdropContract = new ethers.Contract(
         airdropContractAddress,
@@ -56,14 +54,13 @@ const Airdrop = () => {
       );
       const tx = await oldTokenContract.approve(airdropContractAddress, value);
       const receipt = await tx.wait();
-      if(receipt.status === 1) setApproved(true);
+      if (receipt.status === 1) setApproved(true);
       else setApproved(false);
     }
   };
 
   const handleClaim = async () => {
-    if (window.ethereum && isAuthenticated) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (isAuthenticated) {
       const signer = await provider.getSigner();
       const airdropContract = new ethers.Contract(
         airdropContractAddress,
@@ -71,8 +68,13 @@ const Airdrop = () => {
         signer
       );
 
-      console.log("Claiming for ", BigNumber.from(valueToDeposit).mul(1e9).toString());
-      await airdropContract.claimTokens(BigNumber.from(valueToDeposit).mul(1e9));
+      console.log(
+        "Claiming for ",
+        BigNumber.from(valueToDeposit).mul(1e9).toString()
+      );
+      await airdropContract.claimTokens(
+        BigNumber.from(valueToDeposit).mul(1e9)
+      );
     }
   };
 
@@ -161,10 +163,20 @@ const Airdrop = () => {
           <Typography ml={1} mt={1} align="left" variant="subtitle2" noWrap>
             GolduckDAO tokens to receive: {formatEther(valueToReceive)}
           </Typography>
-          <BlueButton fullWidth sx={{ mt: 4 }} disabled={approved} onClick={() => handleApprove()}>
+          <BlueButton
+            fullWidth
+            sx={{ mt: 4 }}
+            disabled={approved}
+            onClick={() => handleApprove()}
+          >
             Approve
           </BlueButton>
-          <BlueButton fullWidth sx={{ mt: 2 }} disabled={!approved} onClick={() => handleClaim()}>
+          <BlueButton
+            fullWidth
+            sx={{ mt: 2 }}
+            disabled={!approved}
+            onClick={() => handleClaim()}
+          >
             Claim Golduck Dao
           </BlueButton>
           <Typography align="left" variant="caption" noWrap>

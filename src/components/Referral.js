@@ -114,16 +114,16 @@ const Referral = () => {
         <BlueButton fullWidth>Copy to Clipboard</BlueButton>
       </CopyToClipboard>
       <Typography my={1} mx={1} fontSize={12} fontWeight={600}>
-      {`*Invite your friends and get ${referralShare}% ${
-        current === "bsc"
-          ? "BNB"
-          : current === "polygon"
-          ? "MATIC"
-          : current === "metis"
-          ? "METIS"
-          : "ETH"
-      } contributed, +${referralShare}% of the tokens purchased sent to your wallet instantly`}
-    </Typography>
+        {`*Invite your friends and get ${referralShare}% ${
+          current === "bsc"
+            ? "BNB"
+            : current === "polygon"
+            ? "MATIC"
+            : current === "metis"
+            ? "METIS"
+            : "ETH"
+        } contributed, +${referralShare}% of the tokens purchased sent to your wallet instantly`}
+      </Typography>
     </InnerBox>
   );
 };

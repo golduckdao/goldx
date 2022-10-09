@@ -1,33 +1,45 @@
-
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import React from "react";
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
 
 import Appbar from "./components/Appbar";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Rewards from "./pages/Rewards";
 import BuyToken from "./pages/BuyToken";
-import { ethers } from 'ethers';
 import useStore from "./store/store";
 import Tools from "./pages/Tools";
 import Services from "./pages/Services";
 import { Typography } from "@mui/material";
 import Airdrop from "./pages/Airdrop";
+import { providerOptions } from "./utils";
 
 function App() {
-  const {switchBsc, switchPolygon, switchEth, switchMetis, bsc, polygon, eth, metis, toggleChainDialog} = useStore(state => state);
+  const {
+    switchBsc,
+    switchPolygon,
+    switchEth,
+    switchMetis,
+    bsc,
+    polygon,
+    eth,
+    metis,
+    toggleChainDialog,
+    isAuthenticated,
+    provider,
+  } = useStore();
   React.useEffect(() => {
     async function initialize() {
-      if(window.ethereum)
-      {
-        window.ethereum.send('eth_requestAccounts');
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        let chain = `0x${await (await provider.getNetwork()).chainId.toString(16)}`;
-        console.log("Chain ID", chain)
-        if( chain === polygon.network) switchPolygon()
-        else if( chain === bsc.network) switchBsc()
-        else if( chain === eth.network) switchEth()
-        else if( chain === metis.network) switchMetis()
+      if (isAuthenticated) {
+        let chain = `0x${await (
+          await provider.getNetwork()
+        ).chainId.toString(16)}`;
+        console.log("Chain ID", chain);
+        if (chain === polygon.network) switchPolygon();
+        else if (chain === bsc.network) switchBsc();
+        else if (chain === eth.network) switchEth();
+        else if (chain === metis.network) switchMetis();
         else toggleChainDialog();
       }
     }
@@ -35,11 +47,15 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    if(window.ethereum)
-    {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider.provider.on('chainChanged', (chainId) => {
-        window.location.reload()
+    async function initialize() {
+      const web3instance = new Web3Modal({
+        cacheProvider: false,
+        providerOptions,
+      });
+      const web3modalInstance = await web3instance.connect();
+      const provider = new ethers.providers.Web3Provider(web3modalInstance);
+      provider.provider.on("chainChanged", (chainId) => {
+        window.location.reload();
         // console.log("chain ID changed to:", chainId)
         // chainId
         // 0x13881 -> polygon testnet
@@ -52,40 +68,51 @@ function App() {
         // else if( chainId === metis.network) switchMetis()
         // else toggleChainDialog();
       });
-      provider.provider.on('accountsChanged', () => window.reload());
-      return () => {
-        provider.provider.removeAllListeners('chainChanged');
-        provider.provider.removeAllListeners('accountsChanged');
-      }
-
+      provider.provider.on("accountsChanged", () => window.reload());
+      // return () => {
+      //   provider.provider.removeAllListeners("chainChanged");
+      //   provider.provider.removeAllListeners("accountsChanged");
+      // };
     }
-    
+    initialize();
   }, []);
   return (
-    <div className="App"
-    css={css`
-    min-height: 100vh;
-    width: 100%;
-    background-color: #131A36;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    `}>
-      <Appbar/>
+    <div
+      className="App"
+      css={css`
+        min-height: 100vh;
+        width: 100%;
+        background-color: #131a36;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      `}
+    >
+      <Appbar />
       {/* <ResponsiveDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle}/> */}
       <Routes>
-        <Route path="/" element={<Navigate to="/buy" replace />}/>
-        <Route path="/buy" >
+        <Route path="/" element={<Navigate to="/buy" replace />} />
+        <Route path="/buy">
           <Route index element={<BuyToken />} />
           <Route path=":user" element={<BuyToken />} />
         </Route>
-        <Route path="/tools" element={<Tools />}/>
+        <Route path="/tools" element={<Tools />} />
         <Route path="/services" element={<Services />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/airdrop" element={<Airdrop />} />
       </Routes>
-      <Typography fontSize={12} color="text.secondary" sx={{ml: {sm: '200px'}, p: 1}}>
-      Disclaimer: GolduckDAO is not a registered broker, analyst or investment. By purchasing GolduckDAO, you agree that you are not purchasing a security or investment and you agree to hold the team harmless and not liable for any losses or taxes you may incur. Although GolduckDAO is an EXPERIMENTAL digital token for social experiment and not a digital currency, always make sure that you are in compliance with your local laws and regulations before you make any purchase.
+      <Typography
+        fontSize={12}
+        color="text.secondary"
+        sx={{ ml: { sm: "200px" }, p: 1 }}
+      >
+        Disclaimer: GolduckDAO is not a registered broker, analyst or
+        investment. By purchasing GolduckDAO, you agree that you are not
+        purchasing a security or investment and you agree to hold the team
+        harmless and not liable for any losses or taxes you may incur. Although
+        GolduckDAO is an EXPERIMENTAL digital token for social experiment and
+        not a digital currency, always make sure that you are in compliance with
+        your local laws and regulations before you make any purchase.
       </Typography>
     </div>
   );
