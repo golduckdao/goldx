@@ -51,7 +51,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
     fetchChain();
   }, [current, isAuthenticated]);
 
-  const handleChainSwitch = async ({network, rpcUrl, chainName}) => {
+  const handleChainSwitch = async ({ network, rpcUrl, chainName }) => {
     // implement logic for switching chains
     if (isAuthenticated) {
       try {
@@ -71,7 +71,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
                 {
                   chainId: network,
                   rpcUrls: [rpcUrl],
-                  chainName
+                  chainName,
                 },
               ],
             });
@@ -82,9 +82,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
         console.error(error);
       }
     } else {
-      alert(
-        "Please Sign in to access this functionality!"
-      );
+      alert("Please connect to wallet to access this functionality!");
     }
     onClose();
   };
@@ -103,18 +101,21 @@ const SwitchChainDialog = ({ open, onClose }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-            my: 1,
-          }}
-        >
-          <Typography mr={1}>You are on</Typography>
-          <img src={chainImg.img} alt={chainImg.name} height={25} />
-          <Typography ml={1}>{chainImg.name}.</Typography>
-        </Box>
+        {isAuthenticated && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "left",
+              alignItems: "center",
+              my: 1,
+            }}
+          >
+            <Typography mr={1}>You are on</Typography>
+            <img src={chainImg.img} alt={chainImg.name} height={25} />
+            <Typography ml={1}>{chainImg.name}.</Typography>
+          </Box>
+        )}
+
         <Typography>
           GoldX is only avaible currently on the following chains:
         </Typography>

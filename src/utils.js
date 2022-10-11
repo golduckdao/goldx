@@ -6,5 +6,8 @@ export const providerOptions = {
     options: {
       infuraId: process.env.REACT_APP_INFURA_KEY 
     }
+  },
+  binancechainwallet: {
+    package: true
   }
 };
