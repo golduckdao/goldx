@@ -11,9 +11,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import useStore from "../store/store";
 
 const Referral = () => {
-  const { buyTokenContractAddress, isAuthenticated, current } = useStore(
-    (state) => state
-  );
+  const { buyTokenContractAddress, isAuthenticated, current, provider } = useStore();
   const [isReferral, setIsReferral] = useState(true);
   const [chainTokenEarned, setChainTokenEarned] = useState(0);
   const [nativeTokenEarned, setNativeTokenEarned] = useState(0);
@@ -24,7 +22,6 @@ const Referral = () => {
   useEffect(() => {
     async function fetchData() {
       if (isAuthenticated) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner(0);
         setAccount(await signer.getAddress());
 
