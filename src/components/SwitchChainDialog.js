@@ -37,7 +37,7 @@ const SwitchChainDialog = ({ open, onClose }) => {
     async function fetchChain() {
       if (
         isAuthenticated &&
-        allowedNetworks.includes(await provider.getNetwork())
+        allowedNetworks.includes(`0x${(await provider.getNetwork()).chainId.toString(16)}`)
       ) {
         if (current === "bsc")
           setChainImg({ name: "Binance Smart Chain", img: _binance });
