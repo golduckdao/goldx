@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,56 +6,72 @@ import {
   IconButton,
   Typography,
   Button,
-  Box
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+  Box,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import _binance from "../assets/images/Binance_Logo.svg.png";
 import _polygon from "../assets/images/polygon_logo.png";
 import _eth from "../assets/images/eth_logo.png";
 import _metis from "../assets/images/metis_logo.png";
 
-import useStore from '../store/store';
+import useStore from "../store/store";
 
-const SwitchChainDialog = ({open, onClose}) => {
-  const {bsc, polygon, eth, metis, allowedNetworks, current} = useStore(state =>  state);
+const SwitchChainDialog = ({ open, onClose }) => {
+  const {
+    bsc,
+    polygon,
+    eth,
+    metis,
+    allowedNetworks,
+    current,
+    isAuthenticated,
+    provider,
+  } = useStore();
   const [chainImg, setChainImg] = React.useState({
     name: "Ethereum Mainnet",
-    img: _eth
+    img: _eth,
   });
 
   React.useEffect(() => {
     async function fetchChain() {
-      console.log("Current Chain", current);
-      if(window.ethereum && allowedNetworks.includes(await window.ethereum.request({ method: 'eth_chainId' }))) {
-        if(current === 'bsc') setChainImg({name: 'Binance Smart Chain', img: _binance})
-        else if(current === 'polygon') setChainImg({name: 'Polygon', img: _polygon})
-        else if(current === 'metis') setChainImg({name: 'Metis Andromeda', img: _metis})
+      if (
+        isAuthenticated &&
+        allowedNetworks.includes(`0x${(await provider.getNetwork()).chainId.toString(16)}`)
+      ) {
+        if (current === "bsc")
+          setChainImg({ name: "Binance Smart Chain", img: _binance });
+        else if (current === "polygon")
+          setChainImg({ name: "Polygon", img: _polygon });
+        else if (current === "metis")
+          setChainImg({ name: "Metis Andromeda", img: _metis });
+        else setChainImg({ name: "Ethereum Mainnet", img: _eth });
       }
     }
     fetchChain();
-  }, [current]);
+  }, [current, isAuthenticated]);
 
-
-  const handleChainSwitch = async (id) => {
+  const handleChainSwitch = async ({ network, rpcUrl, chainName }) => {
     // implement logic for switching chains
-    if(window.ethereum) {
+    if (isAuthenticated) {
       try {
         // check if the chain to connect to is installed
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: id }], // chainId must be in hexadecimal numbers
+        await provider.provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: network }], // chainId must be in hexadecimal numbers
         });
       } catch (error) {
         // This error code indicates that the chain has not been added to MetaMask
         // if it is not, then install it into the user MetaMask
         if (error.code === 4902) {
           try {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
+            await provider.provider.request({
+              method: "wallet_addEthereumChain",
               params: [
                 {
-                  chainId: id,
+                  chainId: network,
+                  rpcUrls: [rpcUrl],
+                  chainName,
                 },
               ],
             });
@@ -66,68 +82,82 @@ const SwitchChainDialog = ({open, onClose}) => {
         console.error(error);
       }
     } else {
-      alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
-    } 
+      alert("Please connect to wallet to access this functionality!");
+    }
     onClose();
-  }
+  };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs">
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Typography>
-          Switch Chain
-        </Typography>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography>Switch Chain</Typography>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center', my: 1}}>
-          <Typography mr={1}>You are on</Typography>
-          <img src={chainImg.img} alt={chainImg.name} height={25}/>
-          <Typography ml={1}>{chainImg.name}.</Typography>
-        </Box>
+        {isAuthenticated && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "left",
+              alignItems: "center",
+              my: 1,
+            }}
+          >
+            <Typography mr={1}>You are on</Typography>
+            <img src={chainImg.img} alt={chainImg.name} height={25} />
+            <Typography ml={1}>{chainImg.name}.</Typography>
+          </Box>
+        )}
+
         <Typography>
           GoldX is only avaible currently on the following chains:
         </Typography>
         <Button
           variant="contained"
           fullWidth
-          sx={{my: 1}}
+          sx={{ my: 1 }}
           startIcon={<img src={_eth} height={20} alt="Ethereum Logo" />}
-          onClick={() => handleChainSwitch(eth.network)}
+          onClick={() => handleChainSwitch(eth)}
         >
           Ethereum Mainnet
         </Button>
         <Button
           variant="contained"
           fullWidth
-          sx={{my: 1}}
+          sx={{ my: 1 }}
           startIcon={<img src={_binance} height={20} alt="BSC Logo" />}
-          onClick={() => handleChainSwitch(bsc.network)}
+          onClick={() => handleChainSwitch(bsc)}
         >
           Binance Smart Chain (BSC)
         </Button>
         <Button
           variant="contained"
           fullWidth
-          sx={{my: 1}}
+          sx={{ my: 1 }}
           startIcon={<img src={_polygon} height={20} alt="Polygon Logo" />}
-          onClick={() => handleChainSwitch(polygon.network)}
+          onClick={() => handleChainSwitch(polygon)}
         >
           Polygon
         </Button>
         <Button
           variant="contained"
           fullWidth
-          sx={{my: 1}}
+          sx={{ my: 1 }}
           startIcon={<img src={_metis} height={20} alt="Polygon Logo" />}
-          onClick={() => handleChainSwitch(metis.network)}
+          onClick={() => handleChainSwitch(metis)}
         >
           Metis Andromeda
         </Button>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default SwitchChainDialog
+export default SwitchChainDialog;

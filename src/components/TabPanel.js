@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import React from "react";
+import { Box } from "@mui/material";
 
 function TabPanel(props) {
-  const { children, value, index, boxSx,  ...other } = props;
+  const { children, value, index, boxSx, ...other } = props;
 
   return (
     <div
@@ -12,11 +12,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3, ...boxSx }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3, ...boxSx }}>{children}</Box>}
     </div>
   );
 }
