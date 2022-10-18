@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
+import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -190,6 +191,11 @@ export default function ResponsiveDrawer(props) {
           </Typography>
         </ButtonBase>
         {drawer}
+        <ButtonBase sx={{borderRadius: '60%', py:2, backgroundColor: theme.palette.primary.light, mb: -3}} onClick={handleDrawerToggle}>
+          <Paper sx={{background: 'none'}}>
+            X
+          </Paper>
+        </ButtonBase>
       </Drawer>
       <Drawer
         variant="permanent"
