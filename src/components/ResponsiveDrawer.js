@@ -68,6 +68,10 @@ export default function ResponsiveDrawer(props) {
   const { isAuthenticated, logout } = useStore((state) => state);
 
   const view = useMediaQuery(theme.breakpoints.down("sm"));
+  const handleLogin = () => {
+    login();
+    handleDrawerToggle();
+  }
 
   const drawer = (
     <div>
@@ -175,7 +179,7 @@ export default function ResponsiveDrawer(props) {
             startIcon={
               <AccountBalanceWalletOutlinedIcon sx={{ color: "#39D0D8CC" }} />
             }
-            onClick={isAuthenticated ? () => logout() : () => login()}
+            onClick={isAuthenticated ? () => logout() : () => handleLogin()}
           >
             {isAuthenticated
               ? `Disconnect 0x...${account.slice(
