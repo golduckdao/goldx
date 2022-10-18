@@ -118,7 +118,7 @@ const Airdrop = () => {
             display: { sm: "none", md: "block" },
           }}
         />
-        <InnerBox boxSx={{ zIndex: 1000 }} paperSx={{ p: 1, pt: 3 }}>
+        <InnerBox boxSx={{ zIndex: 2 }} paperSx={{ p: 1, pt: 3 }}>
           <Paper sx={{ width: "100%", borderRadius: theme.spacing(2), p: 2 }}>
             <Box
               sx={{
